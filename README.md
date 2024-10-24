@@ -1,30 +1,26 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/JLYnumnD)
-# Titlu proiect
+# Coinflip - aplicatie de gestionare a bugetului
 ### Student(i)
 
 ## Descriere
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+Coinflip este o aplicatie pentru gestionarea bugetului personal care permite utilizatorilor sa isi monitorizeze tranzactiile, oferind functii de filtrare și generare de rapoarte lunare
+
 
 ## Obiective
-Lorem ipsum
 
-* ob1
-* ob2
-* ob3
-    - sob31
-    - sob32
-    - ...
-* ....
+* monitorizarea veniturilor si cheltuielilor utilizatorului
+  - filtrarea tranzactiilor după categorie
+  - filtrarea tranzactiilor dupa modul de plata (cash sau card)
+* generarea unui raport al tranzactiilor pentru fiecare luna
 
 ## Arhitectura
-Lorem ipsum ...
-
-![Alt text](documentatie-ghid-utlizare-raport/diagrama-clase.png)
-
-Lorem ipsum ...
+![Untitled Notebook-2](https://github.com/user-attachments/assets/fd7d3402-adda-4b7e-95f1-3c407009e086)
 
 ## Functionalitati/Exemple utilizare
-Lorem ipsum
+* adaugarea, editarea si stergerea veniturilor si cheltuielilor
+* adaugarea tranzactiilor de tip abonament care se adauga automat in aceeasi zi a fiecarei luni
+* optiunea de a exclude tranzactii din raportul lunar
+* filtrarea tranzactiilor dupa categorie sau dupa modul de plata
 
 ### Resurse
 Markdown Guide, [Online] Available: https://www.markdownguide.org/basic-syntax/ [accesed: Mar 14, 1706]
