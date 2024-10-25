@@ -14,7 +14,7 @@ Coinflip este o aplicatie pentru gestionarea bugetului personal care permite uti
 * generarea unui raport al tranzactiilor pentru fiecare luna
 
 ## Arhitectura
-![Untitled Notebook-2](https://github.com/user-attachments/assets/fd7d3402-adda-4b7e-95f1-3c407009e086)
+
 
 ## Functionalitati/Exemple utilizare
 * adaugarea, editarea si stergerea veniturilor si cheltuielilor
