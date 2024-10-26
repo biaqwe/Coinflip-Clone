@@ -15,7 +15,10 @@ Coinflip este o aplicatie pentru gestionarea bugetului personal care permite uti
   - total venituri si cheltuieli
 
 ## Arhitectura
-![Untitled Notebook-4 2](https://github.com/user-attachments/assets/a30b0f84-669b-454d-8080-5e0edcd21d5f)
+
+### Clase
+![JPEG image-4D85-B89A-A7-0](https://github.com/user-attachments/assets/577e4a20-801e-487c-9279-2a6ab9854ed5)
+
 
 * clasa "Transaction"
   - Atribute:
@@ -62,6 +65,13 @@ Coinflip este o aplicatie pentru gestionarea bugetului personal care permite uti
     - getTransactionsByCategory(category): returneaza tranzactiile din lista care fac parte dintr-o anumita categorie
     - getTransactionsByPaymentMethod(paymentMethod): returneaza tranzactiile din lista care au metoda de plata specificata
     - generateReport(month, year): genereaza un raport al tranzactiilor utilizatorului pentru luna si anul specificate
+   
+### Tabele
+![JPEG image-4483-95C9-C4-0](https://github.com/user-attachments/assets/2e502fec-5588-43ce-8682-bd7dfc47c1f5)
+* tabelul "users": contine utilizatorii, fiecare cu un identificator, username, parola si email
+* tabelul "categories": contine categoriile de tranzactii, fiecare cu un identificator si nume
+* tabelul "transactions": contine tranzactiile, cu detalii despre suma, metoda de plata, data, tipul de tranzactie (in caz de abonament), daca este exclusa din raport, sursa (in cazul veniturilor), si daca este esentiala (in cazul cheltuielilor); are legaturi catre tabelele "users" si "categories" prin campurile "userID" si "categoryID"
+
 
 ## Functionalitati/Exemple utilizare
 * adaugarea, editarea si stergerea veniturilor si cheltuielilor
