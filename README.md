@@ -1,6 +1,6 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/JLYnumnD)
 # Coinflip - aplicatie de gestionare a bugetului
-### Student(i)
+### Bianca Balaș
 
 ## Descriere
 Coinflip este o aplicatie pentru gestionarea bugetului personal care permite utilizatorilor sa isi monitorizeze tranzactiile, oferind functii de filtrare și generare de rapoarte lunare
@@ -71,6 +71,10 @@ Coinflip este o aplicatie pentru gestionarea bugetului personal care permite uti
 * tabelul "users": contine utilizatorii, fiecare cu un identificator, username, parola si email
 * tabelul "categories": contine categoriile de tranzactii, fiecare cu un identificator si nume
 * tabelul "transactions": contine tranzactiile, cu detalii despre suma, metoda de plata, data, tipul de tranzactie (in caz de abonament), daca este exclusa din raport, sursa (in cazul veniturilor), si daca este esentiala (in cazul cheltuielilor); are legaturi catre tabelele "users" si "categories" prin campurile "userID" si "categoryID"
+
+### Pagini
+![Untitled_Artwork](https://github.com/user-attachments/assets/437234d2-70e1-45e5-be24-3b0906a0f2ff)
+
 
 
 ## Functionalitati/Exemple utilizare
