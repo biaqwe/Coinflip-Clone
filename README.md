@@ -8,11 +8,16 @@ Coinflip este o aplicatie pentru gestionarea bugetului personal care permite uti
 
 ## Obiective
 
-* monitorizarea veniturilor si cheltuielilor utilizatorului
-  - filtrarea tranzactiilor după categorie
-  - filtrarea tranzactiilor dupa modul de plata (cash sau card)
-* generarea unui raport al tranzactiilor
-  - total venituri si cheltuieli
+### Monitorizarea veniturilor si cheltuielilor:
+* permite utilizatorilor sa adauge si sa vizualizeze toate veniturile si cheltuielile
+* suporta tranzactii recurente, cum ar fi abonamente, care se adauga automat in fiecare luna
+
+### Filtrarea tranzactiilor:
+* utilizatorii pot filtra tranzactiile dupa categorie (ex. transport, utilitati) si dupa metoda de plata (cash sau card)
+
+### Generarea rapoartelor:
+* aplicatia poate genera rapoarte care rezuma totalul veniturilor si cheltuielilor pentru o anumita luna
+* utilizatorul are optiunea de a exclude tranzactii din rapoarte pentru a personaliza analiza
 
 ## Arhitectura
 
@@ -36,17 +41,11 @@ Coinflip este o aplicatie pentru gestionarea bugetului personal care permite uti
    
 * clasa "Income" extinde clasa "Transaction"
   - Atribute:
-    - mostenite: amount, category, paymentMethod, date, subscription
     - source (String): sursa venitului
-  -Operatii:
-    - getDetails(): include metodele de tip get pentru fiecare atribut
    
 * clasa "Expense" extinde clasa "Transaction"
   - Atribute:
-    - mostenite: amount, category, paymentMethod, date, subscription
     - isEssential (boolean): true daca tranzactia este esentiala (ex. chirie), false altfel (valoarea implicita: false)
-  -Operatii:
-    - getDetails(): include metodele de tip get pentru fiecare atribut
    
 * clasa "User"
   - Atribute:
@@ -78,10 +77,26 @@ Coinflip este o aplicatie pentru gestionarea bugetului personal care permite uti
 
 
 ## Functionalitati/Exemple utilizare
-* adaugarea, editarea si stergerea veniturilor si cheltuielilor
-* adaugarea tranzactiilor de tip abonament care se adauga automat in aceeasi zi a fiecarei luni
-* optiunea de a exclude tranzactii din rapoarte
-* filtrarea tranzactiilor dupa categorie sau dupa modul de plata
+### Inregistrare:
+* Utilizatorul completeaza un formular cu informatiile de inregistrare (username, parola, email)
+* Verifica daca username-ul si email-ul sunt unice
 
-### Resurse
-Markdown Guide, [Online] Available: https://www.markdownguide.org/basic-syntax/ [accesed: Mar 14, 1706]
+### Autentificare:
+* Utilizatorul introduce username-ul si parola alese in timpul inregistrarii
+* Daca datele sunt corecte, utilizatorul este autentificat
+
+### Adaugarea unei tranzactii:
+* Utilizatorul poate adauga o noua tranzactie (venit sau cheltuiala) completand un formular cu urmatoarele detalii: suma, categoria, metoda de plata, data, si tipul de tranzactie (abonament sau nu)
+* Utilizatorul poate selecta daca tranzactia sa fie exclusa din rapoarte
+
+### Editarea unei tranzactii:
+* Utilizatorul poate edita o tranzactie existenta
+
+### Stergerea unei tranzactii:
+* Utilizatorul poate sterge o tranzactie din lista
+
+### Filtrarea tranzactiilor:
+* Utilizatorul poate filtra tranzactiile dupa categorie sau dupa metoda de plata
+
+### Generarea unui raport lunar:
+* Utilizatorul poate genera un raport al tranzactiilor pentru o luna si un an specificat
