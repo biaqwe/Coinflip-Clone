@@ -56,7 +56,7 @@
             <HBox layoutX="31.0" layoutY="72.0" />
             <ImageView fitHeight="178.0" fitWidth="200.0" layoutX="94.0" layoutY="62.0">
                <image>
-                  <Image url="@../resources/coinflip.png" />
+                  <Image url="@../../resources/resources/coinflip.png" />
                </image>
             </ImageView>
          </children>
