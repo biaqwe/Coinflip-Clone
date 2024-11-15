@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="400.0" style="-fx-background-color: linear-gradient(to bottom, #a9cfe4, #d4c8fe);" stylesheets="@application.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.LoginCtrl">
+   <center>
+      <AnchorPane prefHeight="429.0" prefWidth="395.0" BorderPane.alignment="CENTER">
+         <children>
+            <VBox layoutX="50.0" layoutY="2.0" prefHeight="237.0" prefWidth="293.0" style="-fx-background-color: white; -fx-background-radius: 20px; -fx-opacity: 80%;" />
+            <HBox layoutX="55.0" />
+            <Button id="loginBtn" layoutX="116.0" layoutY="284.0" mnemonicParsing="false" onAction="#loginBtnClick" prefHeight="50.0" prefWidth="161.0" style="-fx-background-color: #b397f0; -fx-background-radius: 30px; -fx-cursor: hand;" styleClass="loginBtn" text="Log In" textFill="WHITE">
+               <font>
+                  <Font name="HirukoPro-Regular" size="25.0" />
+               </font>
+            </Button>
+            <Label layoutX="81.0" layoutY="33.0" text="Enter your username" textFill="#8f82c2">
+               <font>
+                  <Font name="HirukoPro-Book" size="15.0" />
+               </font>
+            </Label>
+            <TextField fx:id="ufield" layoutX="76.0" layoutY="56.0" prefHeight="46.0" prefWidth="233.0" style="-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 3px;" styleClass="text-field" />
+            <Label layoutX="82.0" layoutY="124.0" text="Enter your password" textFill="#8f82c2">
+               <font>
+                  <Font name="HirukoPro-Book" size="15.0" />
+               </font>
+            </Label>
+            <PasswordField fx:id="pfield" layoutX="76.0" layoutY="147.0" prefHeight="46.0" prefWidth="234.0" style="-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 3px;" styleClass="password-field" />
+            <Text fill="#4a4a4a" layoutX="67.0" layoutY="261.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Don't have an account?" wrappingWidth="190.02743530273438">
+               <font>
+                  <Font name="HirukoPro-Book" size="16.0" />
+               </font>
+            </Text>
+            <Hyperlink fx:id="signupLink" layoutX="257.0" layoutY="237.0" onAction="#goToSignup" text="Sign up!" textFill="WHITE">
+               <font>
+                  <Font name="HirukoPro-BoldOblique" size="18.0" />
+               </font>
+            </Hyperlink>
+         </children>
+      </AnchorPane>
+   </center>
+   <top>
+      <AnchorPane prefHeight="261.0" prefWidth="400.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox layoutX="31.0" layoutY="72.0" />
+            <ImageView fitHeight="178.0" fitWidth="200.0" layoutX="94.0" layoutY="62.0">
+               <image>
+                  <Image url="@../resources/coinflip.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+   </top>
+</BorderPane>
