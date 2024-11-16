@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="400.0" style="-fx-background-color: linear-gradient(to bottom, #a9cfe4, #d4c8fe);" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.AddCtrl">
+   <center>
+      <AnchorPane prefHeight="429.0" prefWidth="395.0" BorderPane.alignment="CENTER">
+         <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="55.0" layoutY="518.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-fill: #b2bcfe;" width="400.0" />
+
+            <Button fx:id="closeBtn" layoutX="176.0" layoutY="489.0" maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" onAction="#close" prefHeight="50.0" prefWidth="50.0" style="-fx-background-radius: 50px; -fx-background-color: #ffd091; -fx-cursor: hand;" textFill="WHITE">
+               <graphic>
+               </graphic>
+               <graphic>
+                  <ImageView fitHeight="36.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@/resources/x.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button layoutX="14.0" layoutY="520.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="57.0" style="-fx-background-color: #b2bcfe; -fx-cursor: hand;">
+               <graphic>
+                  <ImageView fitHeight="36.0" fitWidth="31.0">
+                     <image>
+                        <Image url="@/resources/transactions.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+            <Button layoutX="99.0" layoutY="520.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="57.0" style="-fx-background-color: #b2bcfe; -fx-cursor: hand;">
+               <graphic>
+                  <ImageView fitHeight="36.0" fitWidth="31.0">
+                     <image>
+                        <Image url="@/resources/report.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button layoutX="243.0" layoutY="520.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="57.0" style="-fx-background-color: #b2bcfe; -fx-cursor: hand;">
+               <graphic>
+                  <ImageView fitHeight="36.0" fitWidth="38.0">
+                     <image>
+                        <Image url="@/resources/rec.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="logoutBtn" layoutX="329.0" layoutY="520.0" mnemonicParsing="false" onAction="#logout" prefHeight="49.0" prefWidth="57.0" style="-fx-background-color: #b2bcfe; -fx-cursor: hand;">
+               <graphic>
+                  <ImageView fitHeight="36.0" fitWidth="40.0">
+                     <image>
+                        <Image url="@/resources/logout.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <GridPane fx:id="grid" layoutX="16.0" layoutY="1.0" prefHeight="479.0" prefWidth="369.0" style="-fx-background-color: white; -fx-background-radius: 20px; -fx-padding: 20px;">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="163.0" minWidth="10.0" prefWidth="163.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="113.0" minWidth="10.0" prefWidth="54.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label text="Transaction" textFill="#6b6290">
+                     <font>
+                        <Font name="HirukoPro-Book" size="20.0" />
+                     </font>
+                  </Label>
+                  <Label text="Type" textFill="#6b6290" GridPane.rowIndex="1">
+                     <font>
+                        <Font name="HirukoPro-Book" size="20.0" />
+                     </font>
+                  </Label>
+                  <Label text="Amount" textFill="#6b6290" GridPane.rowIndex="2">
+                     <font>
+                        <Font name="HirukoPro-Book" size="20.0" />
+                     </font>
+                  </Label>
+                  <Label text="Category" textFill="#6b6290" GridPane.rowIndex="3">
+                     <font>
+                        <Font name="HirukoPro-Book" size="20.0" />
+                     </font>
+                  </Label>
+                  <Label text="Payment method" textFill="#6b6290" GridPane.rowIndex="4">
+                     <font>
+                        <Font name="HirukoPro-Book" size="20.0" />
+                     </font>
+                  </Label>
+                  <Label text="Subscription?" textFill="#6b6290" GridPane.rowIndex="5">
+                     <font>
+                        <Font name="HirukoPro-Book" size="20.0" />
+                     </font>
+                  </Label>
+                  <CheckBox mnemonicParsing="false" style="-fx-cursor: hand;" stylesheets="@application.css" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+                  <Label prefWidth="244.0" text="   Excluded?" textFill="#6b6290" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
+                     <font>
+                        <Font name="HirukoPro-Book" size="20.0" />
+                     </font>
+                  </Label>
+                  <CheckBox mnemonicParsing="false" prefWidth="29.0" style="-fx-cursor: hand;" stylesheets="@application.css" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+                  <TextField prefHeight="31.0" prefWidth="160.0" style="-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 2px;" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" />
+                  <TextField prefHeight="31.0" prefWidth="160.0" style="-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 2px;" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />
+                  <TextField prefHeight="31.0" prefWidth="160.0" style="-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 2px;" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
+                  <ComboBox fx:id="select" prefHeight="31.0" prefWidth="232.0" style="-fx-background-radius: 30px; -fx-background-color: white; -fx-border-color: #aab6fe;; -fx-border-radius: 30px; -fx-border-width: 2px;" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
+                  <TextField prefHeight="31.0" prefWidth="160.0" style="-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 2px;" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" />
+               </children>
+            </GridPane>
+            <Button layoutX="132.0" layoutY="424.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="128.0" style="-fx-background-radius: 30px; -fx-background-color: #b397f0; -fx-cursor: hand;" text="Save" textFill="WHITE">
+               <font>
+                  <Font name="HirukoPro-Book" size="23.0" />
+               </font>
+            </Button>
+         </children>
+      </AnchorPane>
+   </center>
+   <top>
+      <AnchorPane prefHeight="116.0" prefWidth="400.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox layoutX="31.0" layoutY="72.0" />
+            <HBox prefHeight="55.0" prefWidth="400.0" style="-fx-background-color: #b397f0;" />
+            <ImageView fitHeight="115.0" fitWidth="133.0" layoutX="131.0" layoutY="12.0">
+               <image>
+                  <Image url="@/resources/coinflip.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+   </top>
+</BorderPane>

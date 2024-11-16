@@ -6,3 +6,15 @@
 .scroll-pane .viewport {
     -fx-background-color: transparent;
 }
+
+.check-box {
+    -fx-font-size: 16px;
+    -fx-text-fill: #0fb8a7;
+    -fx-background-color: transparent;
+}
+
+.check-box .box {
+    -fx-border-color: #aab6fe; 
+    -fx-border-width: 2px;
+    -fx-background-color: #ffffff;
+}
