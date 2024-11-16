@@ -47,6 +47,27 @@ public class Transaction {
 	public boolean isExcluded() {
 		return excludedFromReport;
 	}
+	public void setName(String n) {
+		name=n;
+	}
+	public void setAmount(double a) {
+		amount=a;
+	}
+	public void setCategory(String c) {
+		category=c;
+	}
+	public void setPayment(String p) {
+		paymentMethod=p;
+	}
+	public void setDate(LocalDate d) {
+		date=d;
+	}
+	public void flipSubscription() {
+		subscription=!(subscription);
+	}
+	public void flipExcluded() {
+		excludedFromReport=!(excludedFromReport);
+	}
 	
 	@Override
 	public String toString() {
