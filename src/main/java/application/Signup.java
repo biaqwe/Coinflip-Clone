@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 public class Signup {
 	//checks if username already exists in db
 	public boolean valid(String username) {
-		String query="SELECt * FROM users WHERE username=?";
+		String query="SELECT * FROM users WHERE username=?";
 		try(Connection connection=DatabaseConn.getConnection(); PreparedStatement stmt=connection.prepareStatement(query)){
 			stmt.setString(1, username);
 			ResultSet result=stmt.executeQuery();
