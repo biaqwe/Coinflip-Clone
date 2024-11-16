@@ -38,7 +38,7 @@ public class SignupCtrl {
 	public void signupBtnClick() {
 		String username=ufield.getText();
 		String password=pfield.getText();
-		System.out.println("Attempting signup with username: "+username+" and password: "+password);
+		System.out.println("Attempting signup with username: "+username+" and password: "+password);//debug
 		if(username.isEmpty() || password.isEmpty()) {
 			Alert alert=new Alert(AlertType.ERROR);
 			alert.setTitle("Signup Error");
@@ -50,7 +50,7 @@ public class SignupCtrl {
 		if(signup.valid(username)) {
 			Alert alert=new Alert(AlertType.ERROR);
 			alert.setTitle("Signup Error");
-            alert.setHeaderText("All fields are required.");
+            alert.setHeaderText("Username is taken.");
             alert.showAndWait();
 		}
 		else {
