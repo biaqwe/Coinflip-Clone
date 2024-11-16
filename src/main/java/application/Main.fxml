@@ -22,7 +22,7 @@
 			   </content>
 			</ScrollPane>
 
-            <Button layoutX="176.0" layoutY="489.0" maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" style="-fx-background-radius: 50px; -fx-background-color: #ffd091; -fx-cursor: hand;" textFill="WHITE">
+            <Button fx:id="addBtn" layoutX="176.0" layoutY="489.0" maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" onAction="#addBtnClick" prefHeight="50.0" prefWidth="50.0" style="-fx-background-radius: 50px; -fx-background-color: #ffd091; -fx-cursor: hand;" textFill="WHITE">
                <graphic>
                </graphic>
                <graphic>

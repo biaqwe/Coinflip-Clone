@@ -1,11 +1,15 @@
 package application;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
@@ -42,6 +46,24 @@ public class MainCtrl {
     }
     
     @FXML
+    private Button addBtn;
+    @FXML
+    private void addBtnClick() {
+        try {
+            FXMLLoader loader=new FXMLLoader(getClass().getResource("Add.fxml"));
+            Parent root=loader.load();
+            String css = getClass().getResource("application.css").toExternalForm();
+            root.getStylesheets().add(css);
+            Stage stage=(Stage) addBtn.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @FXML
     private VBox box;
     @FXML
     private ScrollPane scroll;
@@ -50,6 +72,7 @@ public class MainCtrl {
     private Group createCard(Transaction transaction) {
         Group card=new Group();
         GridPane grid=new GridPane();
+        //design stuff
         grid.setStyle("-fx-background-color: white; -fx-background-radius: 20px; -fx-padding: 10px;");
         grid.getColumnConstraints().addAll(new ColumnConstraints(100), new ColumnConstraints(100), new ColumnConstraints(100));
         grid.getRowConstraints().addAll(new RowConstraints(30), new RowConstraints(30), new RowConstraints(30));
@@ -60,31 +83,31 @@ public class MainCtrl {
         GridPane.setHalignment(name, javafx.geometry.HPos.LEFT);
         grid.add(name, 0, 0);
 
-        if(transaction instanceof Income) {
+        if(transaction instanceof Income) { //if transaction is income add green button
 	        Button btn=new Button("Income");
-	        btn.setStyle("-fx-background-color: #aad8b9; -fx-background-radius: 10px; -fx-cursor: hand;");
+	        btn.setStyle("-fx-background-color: #aad8b9; -fx-background-radius: 10px;");
 	        btn.setTextFill(javafx.scene.paint.Color.WHITE);
 	        btn.setFont(new Font("HirukoPro-Regular", 14));
 	        GridPane.setHalignment(btn, javafx.geometry.HPos.RIGHT);
 	        grid.add(btn, 2, 0);
         }
         else {
-        	Button btn=new Button("Expense");
-	        btn.setStyle("-fx-background-color: #d9aeac; -fx-background-radius: 10px; -fx-cursor: hand;");
+        	Button btn=new Button("Expense");  //if transaction is income add red button
+	        btn.setStyle("-fx-background-color: #d9aeac; -fx-background-radius: 10px;");
 	        btn.setTextFill(javafx.scene.paint.Color.WHITE);
 	        btn.setFont(new Font("HirukoPro-Regular", 14));
 	        GridPane.setHalignment(btn, javafx.geometry.HPos.RIGHT);
 	        grid.add(btn, 2, 0);
         }
-
-        DecimalFormat df=new DecimalFormat("#,###.00");
+        //format amount to string
+        DecimalFormat df=new DecimalFormat("#,###.00"); // , as thousand separator + always 2 decimals
         String amountStr=df.format(transaction.getAmount());
         Text amount=new Text(amountStr);
         amount.setFill(javafx.scene.paint.Color.valueOf("#6b6290"));
         amount.setFont(new Font("HirukoPro-Book", 18));
         GridPane.setHalignment(amount, javafx.geometry.HPos.LEFT);
         grid.add(amount, 0, 1);
-
+        //format date to string
         DateTimeFormatter dtf=DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String dateStr=transaction.getDate().format(dtf);
         Text date=new Text(dateStr);
@@ -93,14 +116,14 @@ public class MainCtrl {
         GridPane.setHalignment(date, javafx.geometry.HPos.CENTER);
         grid.add(date, 2, 1);
 
-        Button categ=new Button("Category");
+        Button categ=new Button(transaction.getCategory());
         categ.setStyle("-fx-background-color: #d6c8ff; -fx-background-radius: 10px;");
         categ.setTextFill(javafx.scene.paint.Color.WHITE);
         categ.setFont(new Font("HirukoPro-Regular", 14));
         GridPane.setHalignment(categ, javafx.geometry.HPos.LEFT);
         grid.add(categ, 0, 2);
         
-        if(transaction instanceof Income income) {
+        if(transaction instanceof Income income) { //if transaction is income add source button
             Button src=new Button(income.getSource());
             src.setStyle("-fx-background-color: #ffc8a2; -fx-background-radius: 10px;");
             src.setTextFill(javafx.scene.paint.Color.WHITE);
@@ -108,7 +131,7 @@ public class MainCtrl {
             GridPane.setHalignment(src, javafx.geometry.HPos.CENTER);
             grid.add(src, 1, 2);
         }
-        else if(transaction instanceof Expense expense) {
+        else if(transaction instanceof Expense expense) { //if transaction is expense add essential button
         	Button ess=new Button(expense.isEssential() ? "Essential":"Not Essential");
             ess.setStyle("-fx-background-color: #ffc8a2; -fx-background-radius: 10px;");
             ess.setTextFill(javafx.scene.paint.Color.WHITE);
@@ -118,24 +141,15 @@ public class MainCtrl {
         	
         }
         
-        if(transaction.isExcluded()) {
-        	Button excl=new Button("Excluded");
-        	excl.setStyle("-fx-background-color: #aab6fe; -fx-background-radius: 10px;");
-            excl.setTextFill(javafx.scene.paint.Color.WHITE);
-            excl.setFont(new Font("HirukoPro-Regular", 14));
-            GridPane.setHalignment(excl, javafx.geometry.HPos.RIGHT);
-            grid.add(excl, 2, 2);
-        }
-        else {
-        	Button excl=new Button("Included");
-        	excl.setStyle("-fx-background-color: #aab6fe; -fx-background-radius: 10px;");
-            excl.setTextFill(javafx.scene.paint.Color.WHITE);
-            excl.setFont(new Font("HirukoPro-Regular", 14));
-            GridPane.setHalignment(excl, javafx.geometry.HPos.RIGHT);
-            grid.add(excl, 2, 2);
-        }
         
-        card.getChildren().add(grid);
+        Button excl=new Button(transaction.isExcluded() ? "Excluded":"Included");
+       	excl.setStyle("-fx-background-color: #aab6fe; -fx-background-radius: 10px;");
+        excl.setTextFill(javafx.scene.paint.Color.WHITE);
+        excl.setFont(new Font("HirukoPro-Regular", 14));
+        GridPane.setHalignment(excl, javafx.geometry.HPos.RIGHT);
+        grid.add(excl, 2, 2);
+        
+        card.getChildren().add(grid);//add grid  pane to card
         return card;
     }
     
@@ -152,14 +166,47 @@ public class MainCtrl {
     public void loadTransactions() {
     	List<Transaction> transactions=new ArrayList<>();
     	//sample
-    	transactions.add(new Income(1, "Salary", +2000.0, "Work", "Bank Transfer", LocalDate.parse("2024-11-12"), true, false, "Work"));
-    	transactions.add(new Expense(2, "Rent", -800.0, "Home", "Bank Transfer", LocalDate.parse("2024-11-01"), false, true, true));
+    	//transactions.add(new Income(1, "Salary", +2000.0, "Work", "Bank Transfer", LocalDate.paresulte("2024-11-12"), true, false, "Work"));
+    	//transactions.add(new Expense(2, "Rent", -800.0, "Home", "Bank Transfer", LocalDate.paresulte("2024-11-01"), false, true, true));
+    	int userID=Session.getUID(); //gets uid from session
+    	if(userID==-1) {
+    		System.out.println("User not logged in");
+    		return;
+    	}
+    	String query="SELECT * FROM transactions WHERE userID=?";
+    	try(Connection connection=DatabaseConn.getConnection(); PreparedStatement stmt=connection.prepareStatement(query)){
+    		stmt.setInt(1, userID);
+    		ResultSet result=stmt.executeQuery();
+    		while(result.next()) {
+    			//extract values from columns
+    			int transactionID=result.getInt("transactionID");
+                String name=result.getString("name");
+                double amount=result.getDouble("amount");
+                String category=result.getString("category");
+                String paymentMethod=result.getString("paymentMethod");
+                LocalDate date=result.getDate("date").toLocalDate();
+                boolean excluded=result.getInt("excludedFromReport") == 1;
+                String transactionType=result.getString("transactionType");
+                String source=result.getString("source");
+                boolean essential=result.getInt("essential") == 1;
+                if("income".equalsIgnoreCase(transactionType)) { //add income object
+        			transactions.add(new Income(transactionID, name, amount, category, paymentMethod, date, false, excluded, source));
+        		}
+                else if("expense".equalsIgnoreCase(transactionType)) {//add expeense object
+                	transactions.add(new Expense(transactionID, name, amount, category, paymentMethod, date, essential, excluded, false));
+                }
+    		}
+    	}
+    	catch(Exception e) {
+    		e.printStackTrace();
+    	}
         displayCards(transactions);
     }
 
     //load transactions on scene load
     @FXML
     public void initialize() {
+    	//more design stuff
         box.setAlignment(javafx.geometry.Pos.TOP_CENTER);
         box.setPadding(new javafx.geometry.Insets(57, 0, 0, 0));
         scroll.setStyle("-fx-padding: 20px;");
