@@ -40,8 +40,10 @@ public class LoginCtrl {
 		String password=pfield.getText();
 		System.out.println("Attempting login with username: "+username+" and password: "+password);
 		Login login=new Login();
-		if(login.valid(username, password)) {
-			System.out.println("Login successful");
+		int userID=login.getUID(username, password);
+		if(userID!=-1) {
+			System.out.println("Login successful, userID: "+userID);
+			Session.setUID(userID); //saves userid in session
 			try {
 				FXMLLoader loader=new FXMLLoader(getClass().getResource("Main.fxml"));
 				Parent root=loader.load();
