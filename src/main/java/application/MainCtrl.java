@@ -12,13 +12,17 @@ import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
@@ -85,7 +89,7 @@ public class MainCtrl {
 
         if(transaction instanceof Income) { //if transaction is income add green button
 	        Button btn=new Button("Income");
-	        btn.setStyle("-fx-background-color: #aad8b9; -fx-background-radius: 10px;");
+	        btn.setStyle("-fx-background-color: #aad8b9; -fx-background-radius: 10px; -fx-min-width: 80px; -fx-min-height: 30px; -fx-max-width: 80px; -fx-max-height: 30px;");
 	        btn.setTextFill(javafx.scene.paint.Color.WHITE);
 	        btn.setFont(new Font("HirukoPro-Regular", 14));
 	        GridPane.setHalignment(btn, javafx.geometry.HPos.RIGHT);
@@ -93,7 +97,7 @@ public class MainCtrl {
         }
         else {
         	Button btn=new Button("Expense");  //if transaction is income add red button
-	        btn.setStyle("-fx-background-color: #d9aeac; -fx-background-radius: 10px;");
+	        btn.setStyle("-fx-background-color: #d9aeac; -fx-background-radius: 10px; -fx-min-width: 80px; -fx-min-height: 30px; -fx-max-width: 80px; -fx-max-height: 30px;");
 	        btn.setTextFill(javafx.scene.paint.Color.WHITE);
 	        btn.setFont(new Font("HirukoPro-Regular", 14));
 	        GridPane.setHalignment(btn, javafx.geometry.HPos.RIGHT);
@@ -117,7 +121,7 @@ public class MainCtrl {
         grid.add(date, 2, 1);
 
         Button categ=new Button(transaction.getCategory());
-        categ.setStyle("-fx-background-color: #d6c8ff; -fx-background-radius: 10px;");
+        categ.setStyle("-fx-background-color: #d6c8ff; -fx-background-radius: 10px; -fx-min-width: 90px; -fx-min-height: 30px; -fx-max-width: 90px; -fx-max-height: 30px;");
         categ.setTextFill(javafx.scene.paint.Color.WHITE);
         categ.setFont(new Font("HirukoPro-Regular", 14));
         GridPane.setHalignment(categ, javafx.geometry.HPos.LEFT);
@@ -125,7 +129,7 @@ public class MainCtrl {
         
         if(transaction instanceof Income income) { //if transaction is income add source button
             Button src=new Button(income.getSource());
-            src.setStyle("-fx-background-color: #ffc8a2; -fx-background-radius: 10px;");
+            src.setStyle("-fx-background-color: #ffc8a2; -fx-background-radius: 10px; -fx-min-width: 90px; -fx-min-height: 30px; -fx-max-width: 90px; -fx-max-height: 30px;");
             src.setTextFill(javafx.scene.paint.Color.WHITE);
             src.setFont(new Font("HirukoPro-Regular", 14));
             GridPane.setHalignment(src, javafx.geometry.HPos.CENTER);
@@ -133,7 +137,7 @@ public class MainCtrl {
         }
         else if(transaction instanceof Expense expense) { //if transaction is expense add essential button
         	Button ess=new Button(expense.isEssential() ? "Essential":"Not Essential");
-            ess.setStyle("-fx-background-color: #ffc8a2; -fx-background-radius: 10px;");
+            ess.setStyle("-fx-background-color: #ffc8a2; -fx-background-radius: 10px; -fx-min-width: 90px; -fx-min-height: 30px; -fx-max-width: 90px; -fx-max-height: 30px;");
             ess.setTextFill(javafx.scene.paint.Color.WHITE);
             ess.setFont(new Font("HirukoPro-Regular", 14));
             GridPane.setHalignment(ess, javafx.geometry.HPos.CENTER);
@@ -141,16 +145,64 @@ public class MainCtrl {
         	
         }
         
-        
         Button excl=new Button(transaction.isExcluded() ? "Excluded":"Included");
-       	excl.setStyle("-fx-background-color: #aab6fe; -fx-background-radius: 10px;");
+       	excl.setStyle("-fx-background-color: #aab6fe; -fx-background-radius: 10px; -fx-min-width: 90px; -fx-min-height: 30px; -fx-max-width: 90px; -fx-max-height: 30px;");
         excl.setTextFill(javafx.scene.paint.Color.WHITE);
         excl.setFont(new Font("HirukoPro-Regular", 14));
         GridPane.setHalignment(excl, javafx.geometry.HPos.RIGHT);
         grid.add(excl, 2, 2);
         
-        card.getChildren().add(grid);//add grid  pane to card
+        VBox btns=new VBox(10);
+        btns.setAlignment(Pos.CENTER_LEFT);
+        btns.setStyle("-fx-padding: 2px;");
+        
+        Image editIcon=new Image(getClass().getResourceAsStream("/resources/edit.png"));
+        ImageView editIV=new ImageView(editIcon);
+        editIV.setFitWidth(17);
+        editIV.setFitHeight(20);
+        Button editBtn=new Button();
+        editBtn.setGraphic(editIV);
+        editBtn.setStyle("-fx-background-color: #c67ac8; -fx-text-fill: white; -fx-background-radius: 50%; -fx-min-width: 30px; -fx-min-height: 30px; -fx-cursor: hand;");
+        editBtn.setOnAction(e->edit(transaction));
+        btns.getChildren().add(editBtn);
+        
+        Image delIcon=new Image(getClass().getResourceAsStream("/resources/delete.png"));
+        ImageView delIV=new ImageView(delIcon);
+        delIV.setFitWidth(16);
+        delIV.setFitHeight(20);
+        Button delBtn=new Button();
+        delBtn.setGraphic(delIV);
+        delBtn.setStyle("-fx-background-color: #c67ac8; -fx-text-fill: white; -fx-background-radius: 50%; -fx-min-width: 30px; -fx-min-height: 30px; -fx-cursor: hand;");
+        delBtn.setOnAction(e->delete(transaction));
+        btns.getChildren().add(delBtn);
+        
+        HBox all=new HBox(1);
+        all.getChildren().addAll(grid, btns);
+        all.setAlignment(Pos.CENTER);
+        
+        card.getChildren().add(all);//add grid  pane to card
         return card;
+    }
+    
+    public void edit(Transaction transaction) {
+    	try {
+            FXMLLoader loader=new FXMLLoader(getClass().getResource("Edit.fxml"));
+            Parent root=loader.load();
+            String css = getClass().getResource("application.css").toExternalForm();
+            EditCtrl editCtrl=loader.getController();
+            editCtrl.setTransaction(transaction);
+            root.getStylesheets().add(css);
+            Stage stage=(Stage) addBtn.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void delete(Transaction transaction) {
+    	System.out.println("deleting");
     }
     
     //displays transaction cards in vbox
