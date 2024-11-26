@@ -63,10 +63,11 @@ public class AddCtrl {
     private void addSrc() {
     	Label srcLbl=new Label("Source");
     	srcLbl.setStyle("-fx-text-fill: #6b6290; -fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book';");
-    	TextField srcField=new TextField();
+    	srcField=new TextField();
     	srcField.setPrefHeight(31.0);
         srcField.setPrefWidth(160.0);
         srcField.setStyle("-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 2px;");
+        srcField.setId("srcField");
         grid.add(srcLbl, 0, 6);
         grid.add(srcField, 1, 6);
         GridPane.setColumnSpan(srcField, GridPane.REMAINING);
@@ -76,9 +77,10 @@ public class AddCtrl {
     private void addEss() {
     	Label essLbl=new Label("Essential?");
     	essLbl.setStyle("-fx-text-fill: #6b6290; -fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book';");
-    	CheckBox essCb=new CheckBox();
+    	essCb=new CheckBox();
     	essCb.getStyleClass().add("check-box");
         essCb.setStyle("-fx-cursor: hand;");
+        essCb.setId("essCb");
         grid.add(essLbl, 0, 6);
         grid.add(essCb, 0, 6);
         GridPane.setHalignment(essCb, javafx.geometry.HPos.RIGHT);
