@@ -202,7 +202,27 @@ public class MainCtrl {
     }
     
     public void delete(Transaction transaction) {
-    	System.out.println("deleting");
+    	System.out.println("Deleting transaction id: "+transaction.getID());
+    	int id=transaction.getID();
+    	String query="DELETE FROM transactions WHERE transactionID=?";
+    	try(Connection connection=DatabaseConn.getConnection(); PreparedStatement stmt=connection.prepareStatement(query)){
+    		stmt.setInt(1, id);
+    		int rows=stmt.executeUpdate();
+    		if(rows>0) {
+    			System.out.println("Deleted");
+    			box.getChildren().removeIf(node->{
+    				Group card=(Group) node;
+    				return card.getUserData()!=null && ((Transaction) card.getUserData()).getID()==id;
+    			});
+    			loadTransactions();
+    		}
+    		else {
+    			System.out.println("Transaction not found");
+    		}
+    	}
+    	catch(Exception e) {
+    		e.printStackTrace();
+    	}
     }
     
     //displays transaction cards in vbox
