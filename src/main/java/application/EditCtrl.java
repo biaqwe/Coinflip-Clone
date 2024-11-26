@@ -66,7 +66,7 @@ public class EditCtrl {
     	srcField=new TextField();
     	srcField.setPrefHeight(31.0);
         srcField.setPrefWidth(160.0);
-        srcField.setStyle("-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 2px;");
+        srcField.setStyle("-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 2px; -fx-text-fill: #6b6290; -fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book';");
         srcField.setId("srcField");
         grid.add(srcLbl, 0, 6);
         grid.add(srcField, 1, 6);
@@ -119,11 +119,16 @@ public class EditCtrl {
     public void setTransaction(Transaction transaction) {
     	this.transaction=transaction;
     	nameField.setText(transaction.getName());
+    	nameField.setStyle("-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 2px; -fx-text-fill: #6b6290; -fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book';");
     	amountField.setText(String.valueOf(transaction.getAmount()));
+    	amountField.setStyle("-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 2px; -fx-text-fill: #6b6290; -fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book';");
     	categField.setText(transaction.getCategory());
+    	categField.setStyle("-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 2px; -fx-text-fill: #6b6290; -fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book';");
     	paymentField.setText(transaction.getPayment());
+    	paymentField.setStyle("-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 2px; -fx-text-fill: #6b6290; -fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book';");
     	subBox.setSelected(transaction.isSubscription());
     	exclBox.setSelected(transaction.isExcluded());
+    	select.setStyle("-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 2px; -fx-text-fill: #6b6290; -fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book'; -fx-background-colour: white; -fx-background-insets: 0; -fx-opaque: true; -fx-effect: null;");
     	if(transaction instanceof Income) {
     		select.setValue("Income");
     		addSrc();

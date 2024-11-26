@@ -30,13 +30,19 @@
                   <Font name="HirukoPro-Book" size="15.0" />
                </font>
             </Label>
-            <TextField fx:id="ufield" layoutX="76.0" layoutY="56.0" prefHeight="46.0" prefWidth="233.0" style="-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 3px;" styleClass="text-field" />
+            <TextField fx:id="ufield" alignment="CENTER" layoutX="76.0" layoutY="56.0" prefHeight="46.0" prefWidth="233.0" style="-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 3px; -fx-text-fill: #6b6290;" styleClass="text-field">
+               <font>
+                  <Font name="HirukoPro-Book" size="15.0" />
+               </font></TextField>
             <Label layoutX="82.0" layoutY="124.0" text="Enter your password" textFill="#8f82c2">
                <font>
                   <Font name="HirukoPro-Book" size="15.0" />
                </font>
             </Label>
-            <PasswordField fx:id="pfield" layoutX="76.0" layoutY="147.0" prefHeight="46.0" prefWidth="234.0" style="-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 3px;" styleClass="password-field" />
+            <PasswordField fx:id="pfield" alignment="CENTER" layoutX="76.0" layoutY="147.0" prefHeight="46.0" prefWidth="234.0" style="-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 3px; -fx-text-fill: #6b6290;" styleClass="password-field">
+               <font>
+                  <Font name="HirukoPro-Book" size="15.0" />
+               </font></PasswordField>
             <Text fill="#4a4a4a" layoutX="67.0" layoutY="261.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Don't have an account?" wrappingWidth="190.02743530273438">
                <font>
                   <Font name="HirukoPro-Book" size="16.0" />

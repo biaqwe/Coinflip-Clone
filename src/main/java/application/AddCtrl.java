@@ -66,7 +66,7 @@ public class AddCtrl {
     	srcField=new TextField();
     	srcField.setPrefHeight(31.0);
         srcField.setPrefWidth(160.0);
-        srcField.setStyle("-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 2px;");
+        srcField.setStyle("-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 2px; -fx-text-fill: #6b6290; -fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book';-fx-text-fill: #6b6290; -fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book';");
         srcField.setId("srcField");
         grid.add(srcLbl, 0, 6);
         grid.add(srcField, 1, 6);
@@ -85,7 +85,18 @@ public class AddCtrl {
         grid.add(essCb, 0, 6);
         GridPane.setHalignment(essCb, javafx.geometry.HPos.RIGHT);
     }
-    
+    @FXML
+    private TextField nameField;
+    @FXML
+    private TextField amountField;
+    @FXML
+    private TextField categField;
+    @FXML
+    private TextField paymentField;
+    @FXML
+    private CheckBox subBox;
+    @FXML
+    private CheckBox exclBox;
     @FXML
     private void initialize() {
         select.getItems().addAll("Income", "Expense");

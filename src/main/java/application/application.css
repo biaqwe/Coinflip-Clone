@@ -18,3 +18,22 @@
     -fx-border-width: 2px;
     -fx-background-color: #ffffff;
 }
+
+.combo-box {
+    -fx-background-radius: 30px;
+    -fx-border-color: #aab6fe;
+    -fx-border-radius: 30px;
+    -fx-border-width: 2px;
+    -fx-background-color: white;
+    -fx-font-size: 20px;
+    -fx-font-family: 'HirukoPro-Book';
+    -fx-text-fill: #6b6290;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: #6b6290;
+}
+
+.combo-box .editable-input {
+    -fx-text-fill: #6b6290;
+}

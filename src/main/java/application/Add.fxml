@@ -122,11 +122,23 @@
                      </font>
                   </Label>
                   <CheckBox mnemonicParsing="false" prefWidth="29.0" style="-fx-cursor: hand;" stylesheets="@application.css" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
-                  <TextField prefHeight="31.0" prefWidth="160.0" style="-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 2px;" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" />
-                  <TextField prefHeight="31.0" prefWidth="160.0" style="-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 2px;" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />
-                  <TextField prefHeight="31.0" prefWidth="160.0" style="-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 2px;" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
+                  <TextField prefHeight="31.0" prefWidth="160.0" style="-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 2px; -fx-text-fill: #6b6290;" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
+                     <font>
+                        <Font name="HirukoPro-Book" size="20.0" />
+                     </font></TextField>
+                  <TextField prefHeight="31.0" prefWidth="160.0" style="-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 2px; -fx-text-fill: #6b6290;" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
+                     <font>
+                        <Font name="HirukoPro-Book" size="20.0" />
+                     </font></TextField>
+                  <TextField prefHeight="31.0" prefWidth="160.0" style="-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 2px; -fx-text-fill: #6b6290;" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
+                     <font>
+                        <Font name="HirukoPro-Book" size="20.0" />
+                     </font></TextField>
                   <ComboBox fx:id="select" prefHeight="31.0" prefWidth="232.0" style="-fx-background-radius: 30px; -fx-background-color: white; -fx-border-color: #aab6fe;; -fx-border-radius: 30px; -fx-border-width: 2px;" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
-                  <TextField prefHeight="31.0" prefWidth="160.0" style="-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 2px;" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" />
+                  <TextField prefHeight="31.0" prefWidth="160.0" style="-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 2px; -fx-text-fill: #6b6290;" GridPane.columnIndex="1" GridPane.columnSpan="2147483647">
+                     <font>
+                        <Font name="HirukoPro-Book" size="20.0" />
+                     </font></TextField>
                </children>
             </GridPane>
             <Button layoutX="132.0" layoutY="424.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="128.0" style="-fx-background-radius: 30px; -fx-background-color: #b397f0; -fx-cursor: hand;" text="Save" textFill="WHITE">
