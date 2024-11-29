@@ -245,7 +245,7 @@ public class MainCtrl {
     		System.out.println("User not logged in");
     		return;
     	}
-    	String query="SELECT * FROM transactions WHERE userID=?";
+    	String query="SELECT * FROM transactions WHERE userID=? ORDER BY transactionID DESC";
     	try(Connection connection=DatabaseConn.getConnection(); PreparedStatement stmt=connection.prepareStatement(query)){
     		stmt.setInt(1, userID);
     		ResultSet result=stmt.executeQuery();
