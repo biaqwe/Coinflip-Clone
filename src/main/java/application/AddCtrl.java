@@ -1,5 +1,10 @@
 package application;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.time.LocalDate;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -113,5 +118,61 @@ public class AddCtrl {
         });
     }
     
-    
+    @FXML
+    public Button save;
+    @FXML
+    private void add() { //adds new transaction into db
+    	int userID=Session.getUID();
+    	String name=nameField.getText();
+    	double amount=Double.parseDouble(amountField.getText());
+    	String category=categField.getText();
+    	String paymentMethod=paymentField.getText();
+    	boolean subscription=subBox.isSelected();
+    	boolean excludedFromReport=exclBox.isSelected();
+    	String transactionType=(String) select.getValue();
+    	String source=transactionType.equals("Income") ? srcField.getText():null;
+    	boolean essential=transactionType.equals("Expense") ? essCb.isSelected():false;
+    	//debug
+    	System.out.println("UserID: " + userID);
+        System.out.println("Name: " + name);
+        System.out.println("Amount: " + amount);
+        System.out.println("Category: " + category);
+        System.out.println("Payment Method: " + paymentMethod);
+        System.out.println("Transaction Type: " + transactionType);
+        System.out.println("Source: " + source);
+        System.out.println("Essential: " + essential);
+    	String query="INSERT INTO transactions (userID, name, amount, category, paymentMethod, date, subscription, excludedFromReport, transactionType, source, essential) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		try(Connection connection=DatabaseConn.getConnection(); PreparedStatement stmt=connection.prepareStatement(query)){
+			stmt.setInt(1, userID);
+            stmt.setString(2, name);
+            stmt.setDouble(3, amount);
+            stmt.setString(4, category);
+            stmt.setString(5, paymentMethod);
+            stmt.setDate(6, java.sql.Date.valueOf(LocalDate.now()));
+            stmt.setBoolean(7, subscription);
+            stmt.setBoolean(8, excludedFromReport);
+            stmt.setString(9, transactionType);
+            stmt.setString(10, source);
+            stmt.setBoolean(11, essential);
+            int rows=stmt.executeUpdate();
+            if(rows>0)
+            	System.out.println("Transaction added");
+            else
+            	System.out.println("Failed to add transaction");
+            //redirects to main page after save
+            FXMLLoader loader=new FXMLLoader(getClass().getResource("Main.fxml"));
+            Parent root=loader.load();
+            Stage stage=(Stage) save.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+		}
+		catch(SQLException e) {
+			System.out.println("Error adding transaction "+e.getMessage());
+			e.printStackTrace();
+		}
+		catch(Exception e) {
+			System.out.println("Error "+e.getMessage());
+			e.printStackTrace();
+		}
+    }
 }
