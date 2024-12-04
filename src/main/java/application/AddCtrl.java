@@ -24,7 +24,7 @@ public class AddCtrl {
 	 * Butonul pentru delogare
 	 */
     @FXML
-    private Button logoutBtn; //comentariu
+    private Button logoutBtn;
     /**
      * Redirectioneaza utilizatorul pe pagina de logare dupa apasarea butonului de loguot
      */
