@@ -10,11 +10,18 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
+/**
+ * Clasa pentru pagina de autentificare
+ */
 public class LoginCtrl {
-	//handles click on signup hyperlink
+	/**
+	 * Hyperlink pentru pagina de inregistrare
+	 */
 	@FXML
 	private Hyperlink signupLink;
+	/**
+	 * Redirectioneaza utilizatorul pe pagina de inregistrare dupa apasarea hyperlink ului
+	 */
 	@FXML
 	private void goToSignup() {
 		try {
@@ -29,11 +36,19 @@ public class LoginCtrl {
 		}
 	}
 	
-	//handles click on login button
+	/**
+	 * Campul pentru numele de utilizator
+	 */
 	@FXML
     private TextField ufield;
+	/**
+	 * Campul pentru parola
+	 */
     @FXML
     private PasswordField pfield;
+    /**
+     * Verifica daca combinatia de username si parola e valida, redirectioneaza utilizatorul pe pagina principala si salveaza user id ul in sesiune daca da, altfel afiseaza un mesaj de eroare
+     */
     @FXML
 	public void loginBtnClick() {
 		String username=ufield.getText();

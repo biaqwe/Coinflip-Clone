@@ -141,7 +141,7 @@
                      </font></TextField>
                </children>
             </GridPane>
-            <Button fx:id="save" layoutX="132.0" layoutY="424.0" mnemonicParsing="false" onAction="#add" prefHeight="38.0" prefWidth="128.0" style="-fx-background-radius: 30px; -fx-background-color: #b397f0; -fx-cursor: hand;" text="Save" textFill="WHITE">
+            <Button fx:id="save" layoutX="132.0" layoutY="424.0" mnemonicParsing="false" onAction="#add" prefHeight="38.0" prefWidth="128.0" style="-fx-background-radius: 30px; -fx-background-color: #b397f0; -fx-cursor: hand;" text="Add" textFill="WHITE">
                <font>
                   <Font name="HirukoPro-Book" size="23.0" />
                </font>

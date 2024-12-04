@@ -29,12 +29,18 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
+/**
+ * Clasa pentru pagina principala
+ */
 public class MainCtrl {
+	/**
+	 * Butonul pentru delogare
+	 */
     @FXML
     private Button logoutBtn;
-    
-    //handles click on logout button
+    /**
+     * Redirectioneaza utilizatorul pe pagina de logare dupa apasarea butonului de loguot
+     */
     @FXML
     private void logout() {
         try {
@@ -48,9 +54,14 @@ public class MainCtrl {
             e.printStackTrace();
         }
     }
-    
+    /**
+     * Buton pentru deschiderea paginii de adaugare tranzactie
+     */
     @FXML
     private Button addBtn;
+    /**
+     * Redirectioneaza utilizatorul pe pagina de adaugare tranzactie
+     */
     @FXML
     private void addBtnClick() {
         try {
@@ -66,12 +77,21 @@ public class MainCtrl {
             e.printStackTrace();
         }
     }
-    
+    /**
+     * Container pentru organizarea elementelor
+     */
     @FXML
     private VBox box;
+    /**
+     * ScrollPane care permite vizualizarea continutului care depaseste dimensiunile ferestrei
+     */
     @FXML
     private ScrollPane scroll;
-    //creates transaction cards
+    /**
+     * Creeaza un card stilizat pentru o tranzactie; cardul contine numele tranzactiei, tipul tranzactiei, suma, data, categoria, sursa (pentru venit), daca e esentiala (pentru cheltuiala), daca e exclusa din raport si butoanele de editare si stergere
+     * @param transaction Obiectul "Income" sau "Expense" pentru care se va crea cardul
+     * @return Un obiect de tip Group care contine cardul si butoanele de stergere si editare
+     */
     @FXML
     private Group createCard(Transaction transaction) {
         Group card=new Group();
@@ -183,7 +203,10 @@ public class MainCtrl {
         card.getChildren().add(all);//add grid  pane to card
         return card;
     }
-    
+    /**
+     * Redirectioneaza utilizatorul pe pagina de editare tranzactie
+     * @param transaction tranzactia care va fi editata
+     */
     public void edit(Transaction transaction) {
     	try {
             FXMLLoader loader=new FXMLLoader(getClass().getResource("Edit.fxml"));
@@ -200,7 +223,10 @@ public class MainCtrl {
             e.printStackTrace();
         }
     }
-    
+    /**
+     * Sterge o tranzactie din baza de date si de pe pagina
+     * @param transaction tranzactia care va fi stearsa
+     */
     public void delete(Transaction transaction) {
     	System.out.println("Deleting transaction id: "+transaction.getID());
     	int id=transaction.getID();
@@ -225,7 +251,10 @@ public class MainCtrl {
     	}
     }
     
-    //displays transaction cards in vbox
+    /**
+     * Afiseaza cardurile tranzactiilor; elimina tot ce exista in container, dupa creeaza si adauga cate un card pentru fiecare tranzactie din lista
+     * @param transactions lista de tranzactii care va fi afisata sub forma de carduri
+     */
     public void displayCards(List<Transaction> transactions){
         box.getChildren().clear();
         for(Transaction transaction:transactions){
@@ -234,7 +263,9 @@ public class MainCtrl {
         }
         box.setSpacing(10);
     }
-
+    /**
+     * Obtine din baza de date tranzactiile asociate utilizatorului curent pe baza id ului din sesiune
+     */
     public void loadTransactions() {
     	List<Transaction> transactions=new ArrayList<>();
     	//sample
@@ -275,7 +306,9 @@ public class MainCtrl {
         displayCards(transactions);
     }
 
-    //load transactions on scene load
+    /**
+     * Initializeaza elementele interfetei
+     */
     @FXML
     public void initialize() {
     	//more design stuff

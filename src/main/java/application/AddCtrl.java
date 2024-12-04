@@ -16,11 +16,18 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-
+/**
+ * Clasa pentru functionalitatea de adaugare tranzactie
+ */
 public class AddCtrl {
+	/**
+	 * Butonul pentru delogare
+	 */
     @FXML
     private Button logoutBtn;
-    //handles click on logout button
+    /**
+     * Redirectioneaza utilizatorul pe pagina de logare dupa apasarea butonului de loguot
+     */
     @FXML
     private void logout() {
         try {
@@ -34,10 +41,14 @@ public class AddCtrl {
             e.printStackTrace();
         }
     }
-    
+    /**
+     * Butonul pentru inchiderea paginii de adaugare
+     */
     @FXML
     private Button closeBtn;
-    //handles click on close button
+    /**
+     * Redirectioneaza utilizatorul pe pagina principala daca e apasat butonul de inchidere a formularului de adaugare
+     */
     @FXML
     private void close() {
         try {
@@ -51,20 +62,40 @@ public class AddCtrl {
             e.printStackTrace();
         }
     }
+    /**
+	 * Eticheta pentru campul "source", afisata daca tranzactia e de tip "venit"
+	 */
     @FXML
     private Label srcLbl;
+    /**
+	 * Eticheta pentru checkbox ul "essential", afisata daca tranzactia e de tip "cheltuiala"
+	 */
     @FXML
     private Label essLbl;
+    /**
+	 * Campul "source", afisat daca tranzactia e de tip "venit"
+	 */
     @FXML
     private TextField srcField;
+    /**
+	 * Checkbox ul "essential", afisat daca tranzactia e de tip "cheltuiala"
+	 */
     @FXML
     private CheckBox essCb;
+    /**
+     * Casuta pentru selectare a tipului de tranzactie
+     */
     @FXML
     private ComboBox select;
+    /**
+     * Grid folosit pentru organizarea elementelor
+     */
     @FXML
     private GridPane grid;
     
-    //if transaction type is income adds source label and source text field to the form
+    /**
+     * Adauga campul pentru sursa daca tranzactia e de tip "venit"
+     */
     private void addSrc() {
     	Label srcLbl=new Label("Source");
     	srcLbl.setStyle("-fx-text-fill: #6b6290; -fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book';");
@@ -78,7 +109,9 @@ public class AddCtrl {
         GridPane.setColumnSpan(srcField, GridPane.REMAINING);
     }
     
-    //if transaction type is expense adds expense label and source expense checkbox to the form
+    /**
+     * Adauga checkbox ul pentru tranzactie esentiala daca tranzactia e de tip "cheltuiala"
+     */
     private void addEss() {
     	Label essLbl=new Label("Essential?");
     	essLbl.setStyle("-fx-text-fill: #6b6290; -fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book';");
@@ -90,18 +123,39 @@ public class AddCtrl {
         grid.add(essCb, 0, 6);
         GridPane.setHalignment(essCb, javafx.geometry.HPos.RIGHT);
     }
+    /**
+     * Campul pentru numele tranzactiei
+     */
     @FXML
     private TextField nameField;
+    /**
+     * Campul pentru suma tranzactiei
+     */
     @FXML
     private TextField amountField;
+    /**
+     * Campul pentru categoria tranzactiei
+     */
     @FXML
     private TextField categField;
+    /**
+     * Campul pentru modul de plata al tranzactiei
+     */
     @FXML
     private TextField paymentField;
+    /**
+     * Checkbox pentru tranzactii de tip abonament
+     */
     @FXML
     private CheckBox subBox;
+    /**
+     * Checkbox pentru tranzactii excluse din raport
+     */
     @FXML
     private CheckBox exclBox;
+    /**
+     * Adauga tipurile de tranzactii in casuta select si afiseaza formularul in functie de tipul de tranzactie selectat
+     */
     @FXML
     private void initialize() {
         select.getItems().addAll("Income", "Expense");
@@ -117,11 +171,16 @@ public class AddCtrl {
         	}
         });
     }
-    
+    /**
+     * Buton pentru adaugarea tranzactiei in baza de date; la apasarea acestuia se executa functia "add"
+     */
     @FXML
     public Button save;
+    /**
+     * Colecteaza datele din formular si adauga o noua tranzactie in baza de date; dupa adaugare redirectioneaza utilizatorul catre pagina principala
+     */
     @FXML
-    private void add() { //adds new transaction into db
+    private void add() { 
     	int userID=Session.getUID();
     	String name=nameField.getText();
     	double amount=Double.parseDouble(amountField.getText());
@@ -159,7 +218,6 @@ public class AddCtrl {
             	System.out.println("Transaction added");
             else
             	System.out.println("Failed to add transaction");
-            //redirects to main page after save
             FXMLLoader loader=new FXMLLoader(getClass().getResource("Main.fxml"));
             Parent root=loader.load();
             Stage stage=(Stage) save.getScene().getWindow();
