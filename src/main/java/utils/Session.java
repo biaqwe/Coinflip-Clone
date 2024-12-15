@@ -1,4 +1,4 @@
-package application;
+package utils;
 /**
  * Clasa pentru sesiunea utilizatorului
  */

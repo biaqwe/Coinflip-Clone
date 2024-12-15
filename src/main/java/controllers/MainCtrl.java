@@ -1,4 +1,4 @@
-package application;
+package controllers;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,6 +9,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import entities.Expense;
+import entities.Income;
+import entities.Transaction;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,6 +32,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import utils.DatabaseConn;
+import utils.Session;
 /**
  * Clasa pentru pagina principala
  */
@@ -44,7 +49,7 @@ public class MainCtrl {
     @FXML
     private void logout() {
         try {
-            FXMLLoader loader=new FXMLLoader(getClass().getResource("Login.fxml"));
+            FXMLLoader loader=new FXMLLoader(getClass().getResource("/pages/Login.fxml"));
             Parent root=loader.load();
             Stage stage=(Stage) logoutBtn.getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -65,9 +70,9 @@ public class MainCtrl {
     @FXML
     private void addBtnClick() {
         try {
-            FXMLLoader loader=new FXMLLoader(getClass().getResource("Add.fxml"));
+            FXMLLoader loader=new FXMLLoader(getClass().getResource("/pages/Add.fxml"));
             Parent root=loader.load();
-            String css = getClass().getResource("application.css").toExternalForm();
+            String css = getClass().getResource("/resources/application.css").toExternalForm();
             root.getStylesheets().add(css);
             Stage stage=(Stage) addBtn.getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -209,9 +214,9 @@ public class MainCtrl {
      */
     public void edit(Transaction transaction) {
     	try {
-            FXMLLoader loader=new FXMLLoader(getClass().getResource("Edit.fxml"));
+            FXMLLoader loader=new FXMLLoader(getClass().getResource("/pages/Edit.fxml"));
             Parent root=loader.load();
-            String css = getClass().getResource("application.css").toExternalForm();
+            String css = getClass().getResource("/resources/application.css").toExternalForm();
             EditCtrl editCtrl=loader.getController();
             editCtrl.setTransaction(transaction);
             root.getStylesheets().add(css);

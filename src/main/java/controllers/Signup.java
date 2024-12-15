@@ -1,8 +1,10 @@
-package application;
+package controllers;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+
+import utils.DatabaseConn;
 /**
  * Clasa pentru procesul de inregistrare
  */
@@ -31,6 +33,9 @@ public class Signup {
 	 * @return "true" daca utilizatorul a fost adaugat cu succes, "false" altfel
 	 */
 	public boolean addUser(String username, String password) {
+		if(username==null || username.trim().isEmpty() || password==null || password.trim().isEmpty()) {
+			return false;
+		}
 		String query="INSERT INTO users (username, password) VALUES (?, ?)";
 		try(Connection connection=DatabaseConn.getConnection(); PreparedStatement stmt=connection.prepareStatement(query)){
 			stmt.setString(1, username);

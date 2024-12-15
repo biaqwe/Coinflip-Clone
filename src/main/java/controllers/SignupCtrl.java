@@ -1,4 +1,4 @@
-package application;
+package controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,7 +25,7 @@ public class SignupCtrl {
 	@FXML
 	private void goToLogin() {
 		try {
-			FXMLLoader loader=new FXMLLoader(getClass().getResource("Login.fxml"));
+			FXMLLoader loader=new FXMLLoader(getClass().getResource("/pages/Login.fxml"));
 			Parent root=loader.load();
 			Stage stage=(Stage) loginLink.getScene().getWindow();
 			stage.setScene(new Scene(root));
@@ -71,7 +71,7 @@ public class SignupCtrl {
 		else {
 			if(signup.addUser(username, password)) {
 				try {
-					FXMLLoader loader=new FXMLLoader(getClass().getResource("Login.fxml"));
+					FXMLLoader loader=new FXMLLoader(getClass().getResource("/pages/Login.fxml"));
 					Parent root=loader.load();
 					Stage stage=(Stage) ufield.getScene().getWindow();
 					stage.setScene(new Scene(root));

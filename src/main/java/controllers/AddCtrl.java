@@ -1,4 +1,4 @@
-package application;
+package controllers;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,6 +16,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import utils.DatabaseConn;
+import utils.Session;
 /**
  * Clasa pentru functionalitatea de adaugare tranzactie
  */
@@ -31,7 +33,7 @@ public class AddCtrl {
     @FXML
     private void logout() {
         try {
-            FXMLLoader loader=new FXMLLoader(getClass().getResource("Login.fxml"));
+            FXMLLoader loader=new FXMLLoader(getClass().getResource("/pages/Login.fxml"));
             Parent root=loader.load();
             Stage stage=(Stage) logoutBtn.getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -52,8 +54,10 @@ public class AddCtrl {
     @FXML
     private void close() {
         try {
-            FXMLLoader loader=new FXMLLoader(getClass().getResource("Main.fxml"));
+        	FXMLLoader loader=new FXMLLoader(getClass().getResource("/pages/Main.fxml"));
             Parent root=loader.load();
+            String css = getClass().getResource("/resources/application.css").toExternalForm();
+            root.getStylesheets().add(css);
             Stage stage=(Stage) closeBtn.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
@@ -86,12 +90,12 @@ public class AddCtrl {
      * Casuta pentru selectare a tipului de tranzactie
      */
     @FXML
-    private ComboBox select;
+	private ComboBox select;
     /**
      * Grid folosit pentru organizarea elementelor
      */
     @FXML
-    private GridPane grid;
+	private GridPane grid;
     
     /**
      * Adauga campul pentru sursa daca tranzactia e de tip "venit"
@@ -127,22 +131,22 @@ public class AddCtrl {
      * Campul pentru numele tranzactiei
      */
     @FXML
-    private TextField nameField;
+	private TextField nameField;
     /**
      * Campul pentru suma tranzactiei
      */
     @FXML
-    private TextField amountField;
+	private TextField amountField;
     /**
      * Campul pentru categoria tranzactiei
      */
     @FXML
-    private TextField categField;
+	private TextField categField;
     /**
      * Campul pentru modul de plata al tranzactiei
      */
     @FXML
-    private TextField paymentField;
+	private TextField paymentField;
     /**
      * Checkbox pentru tranzactii de tip abonament
      */
@@ -157,7 +161,7 @@ public class AddCtrl {
      * Adauga tipurile de tranzactii in casuta select si afiseaza formularul in functie de tipul de tranzactie selectat
      */
     @FXML
-    private void initialize() {
+	private void initialize() {
         select.getItems().addAll("Income", "Expense");
         select.setOnAction(event-> {
         	String type=(String) select.getValue();
@@ -175,7 +179,7 @@ public class AddCtrl {
      * Buton pentru adaugarea tranzactiei in baza de date; la apasarea acestuia se executa functia "add"
      */
     @FXML
-    public Button save;
+    private Button save;
     /**
      * Colecteaza datele din formular si adauga o noua tranzactie in baza de date; dupa adaugare redirectioneaza utilizatorul catre pagina principala
      */
@@ -218,8 +222,10 @@ public class AddCtrl {
             	System.out.println("Transaction added");
             else
             	System.out.println("Failed to add transaction");
-            FXMLLoader loader=new FXMLLoader(getClass().getResource("Main.fxml"));
+            FXMLLoader loader=new FXMLLoader(getClass().getResource("/pages/Main.fxml"));
             Parent root=loader.load();
+            String css = getClass().getResource("/resources/application.css").toExternalForm();
+            root.getStylesheets().add(css);
             Stage stage=(Stage) save.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();

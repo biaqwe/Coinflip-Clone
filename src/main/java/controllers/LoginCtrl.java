@@ -1,4 +1,4 @@
-package application;
+package controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,6 +10,7 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import utils.Session;
 /**
  * Clasa pentru pagina de autentificare
  */
@@ -25,7 +26,7 @@ public class LoginCtrl {
 	@FXML
 	private void goToSignup() {
 		try {
-			FXMLLoader loader=new FXMLLoader(getClass().getResource("Signup.fxml"));
+			FXMLLoader loader=new FXMLLoader(getClass().getResource("/pages/Signup.fxml"));
 			Parent root=loader.load();
 			Stage stage=(Stage) signupLink.getScene().getWindow();
 			stage.setScene(new Scene(root));
@@ -60,10 +61,12 @@ public class LoginCtrl {
 			System.out.println("Login successful, userID: "+userID);
 			Session.setUID(userID); //saves userid in session
 			try {
-				FXMLLoader loader=new FXMLLoader(getClass().getResource("Main.fxml"));
-				Parent root=loader.load();
-				Stage stage=(Stage) ufield.getScene().getWindow();
-				stage.setScene(new Scene(root));
+				FXMLLoader loader=new FXMLLoader(getClass().getResource("/pages/Main.fxml"));
+	            Parent root=loader.load();
+	            String css = getClass().getResource("/resources/application.css").toExternalForm();
+	            root.getStylesheets().add(css);
+	            Stage stage=(Stage) ufield.getScene().getWindow();
+	            stage.setScene(new Scene(root));
 	            stage.show();
 			}
 			catch(Exception e) {

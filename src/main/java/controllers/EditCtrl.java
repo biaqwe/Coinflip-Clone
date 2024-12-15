@@ -1,5 +1,8 @@
-package application;
+package controllers;
 
+import entities.Expense;
+import entities.Income;
+import entities.Transaction;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -26,7 +29,7 @@ public class EditCtrl {
 	@FXML
 	private void logout() {
 		try {
-			FXMLLoader loader=new FXMLLoader(getClass().getResource("Login.fxml"));
+			FXMLLoader loader=new FXMLLoader(getClass().getResource("/pages/Login.fxml"));
 			Parent root=loader.load();
 			Stage stage=(Stage) logoutBtn.getScene().getWindow();
 			stage.setScene(new Scene(root));
@@ -48,11 +51,13 @@ public class EditCtrl {
 	@FXML
 	private void close() {
 		try {
-			FXMLLoader loader=new FXMLLoader(getClass().getResource("Main.fxml"));
-			Parent root=loader.load();
-			Stage stage=(Stage) closeBtn.getScene().getWindow();
-			stage.setScene(new Scene(root));
-			stage.show();
+			FXMLLoader loader=new FXMLLoader(getClass().getResource("/pages/Main.fxml"));
+            Parent root=loader.load();
+            String css = getClass().getResource("/resources/application.css").toExternalForm();
+            root.getStylesheets().add(css);
+            Stage stage=(Stage) closeBtn.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
 		}
 		catch(Exception e) {
 			e.printStackTrace();

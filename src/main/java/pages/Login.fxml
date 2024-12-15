@@ -14,18 +14,18 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="400.0" style="-fx-background-color: linear-gradient(to bottom, #a9cfe4, #d4c8fe);" stylesheets="@application.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SignupCtrl">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="400.0" style="-fx-background-color: linear-gradient(to bottom, #a9cfe4, #d4c8fe);" stylesheets="@application.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.LoginCtrl">
    <center>
       <AnchorPane prefHeight="429.0" prefWidth="395.0" BorderPane.alignment="CENTER">
          <children>
             <VBox layoutX="50.0" layoutY="2.0" prefHeight="237.0" prefWidth="293.0" style="-fx-background-color: white; -fx-background-radius: 20px; -fx-opacity: 80%;" />
             <HBox layoutX="55.0" />
-            <Button id="signupBtn" layoutX="116.0" layoutY="284.0" mnemonicParsing="false" onAction="#signupBtnClick" prefHeight="50.0" prefWidth="161.0" style="-fx-background-color: #b397f0; -fx-background-radius: 30px; -fx-cursor: hand;" styleClass="signupBtn" text="Sign Up" textFill="WHITE">
+            <Button id="loginBtn" layoutX="116.0" layoutY="284.0" mnemonicParsing="false" onAction="#loginBtnClick" prefHeight="50.0" prefWidth="161.0" style="-fx-background-color: #b397f0; -fx-background-radius: 30px; -fx-cursor: hand;" styleClass="loginBtn" text="Log In" textFill="WHITE">
                <font>
-                  <Font name="HirukoPro-Bold" size="22.0" />
+                  <Font name="HirukoPro-Regular" size="25.0" />
                </font>
             </Button>
-            <Label layoutX="81.0" layoutY="33.0" stylesheets="@application.css" text="Create your username" textFill="#8f82c2">
+            <Label layoutX="81.0" layoutY="33.0" text="Enter your username" textFill="#8f82c2">
                <font>
                   <Font name="HirukoPro-Book" size="15.0" />
                </font>
@@ -34,7 +34,7 @@
                <font>
                   <Font name="HirukoPro-Book" size="15.0" />
                </font></TextField>
-            <Label layoutX="82.0" layoutY="124.0" text="Create your password" textFill="#8f82c2">
+            <Label layoutX="82.0" layoutY="124.0" text="Enter your password" textFill="#8f82c2">
                <font>
                   <Font name="HirukoPro-Book" size="15.0" />
                </font>
@@ -43,14 +43,14 @@
                <font>
                   <Font name="HirukoPro-Book" size="15.0" />
                </font></PasswordField>
-            <Text fill="#4a4a4a" layoutX="65.0" layoutY="261.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Already have an account?" wrappingWidth="240.09600830078125">
+            <Text fill="#4a4a4a" layoutX="67.0" layoutY="261.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Don't have an account?" wrappingWidth="190.02743530273438">
                <font>
                   <Font name="HirukoPro-Book" size="16.0" />
                </font>
             </Text>
-            <Hyperlink fx:id="loginLink" layoutX="266.0" layoutY="236.0" onAction="#goToLogin" text="Log in!" textFill="WHITE">
+            <Hyperlink fx:id="signupLink" layoutX="257.0" layoutY="237.0" onAction="#goToSignup" text="Sign up!" textFill="WHITE">
                <font>
-                  <Font name="HirukoPro-BoldOblique" size="19.0" />
+                  <Font name="HirukoPro-BoldOblique" size="18.0" />
                </font>
             </Hyperlink>
          </children>
