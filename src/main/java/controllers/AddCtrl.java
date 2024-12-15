@@ -187,7 +187,7 @@ public class AddCtrl {
     private void add() { 
     	int userID=Session.getUID();
     	String name=nameField.getText();
-    	double amount=Double.parseDouble(amountField.getText());
+    	double amount;
     	String category=categField.getText();
     	String paymentMethod=paymentField.getText();
     	boolean subscription=subBox.isSelected();
@@ -195,6 +195,19 @@ public class AddCtrl {
     	String transactionType=(String) select.getValue();
     	String source=transactionType.equals("Income") ? srcField.getText():null;
     	boolean essential=transactionType.equals("Expense") ? essCb.isSelected():false;
+    	
+    	try {
+    		valid(name, amountField.getText(), category, transactionType, source);
+    	}
+    	catch(Exception e) {
+    		System.out.println("Validation failed: "+e.getMessage());
+    		return;
+    	}
+    	amount=Double.parseDouble(amountField.getText());
+    	if("Expense".equals(transactionType)) {
+    		amount=-Math.abs(amount);
+    	}
+    	
     	//debug
     	System.out.println("UserID: " + userID);
         System.out.println("Name: " + name);
@@ -238,5 +251,38 @@ public class AddCtrl {
 			System.out.println("Error "+e.getMessage());
 			e.printStackTrace();
 		}
+    }
+    /**
+     * Verifica daca datele introduse sunt valide
+     * @param name numele tranzactiei
+     * @param amountStr suma tranzactiei
+     * @param category categoria tranzactiei
+     * @param transactionType tipul tranzactiei
+     * @param source sursa tranzactiei, obligatorie daca tranzactia e de tip cheltuiala
+     * @return true daca toate datele sunt valide
+     * @throws NullPointerException daca numele, categoria sau sursa sunt null sau goale
+     * @throws IllegalArgumentException daca suma nu e un numar valid pozitiv
+     */
+    boolean valid(String name, String amountStr, String category, String transactionType, String source) {
+    	if(name==null || name.trim().isEmpty()) {
+    		throw new NullPointerException("Transaction name should not be null or empty");
+    	}
+    	double amount;
+    	try {
+    		amount=Double.parseDouble(amountStr);
+    		if(amount<=0) {
+    			throw new IllegalArgumentException("Transaction amount should be positive");
+    		}
+    	}
+    	catch (NumberFormatException e){
+    		throw new IllegalArgumentException("Transaction amount not valid");
+    	}
+    	if(category==null || category.trim().isEmpty()) {
+    		throw new NullPointerException("Transaction category should not be null or empty");
+    	}
+    	if("Income".equals(transactionType) && (source==null || source.trim().isEmpty())) {
+    		throw new NullPointerException("Transaction source should not be null or empty");
+    	}
+    	return true;
     }
 }
