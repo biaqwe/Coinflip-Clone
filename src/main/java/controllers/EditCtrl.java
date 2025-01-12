@@ -1,5 +1,9 @@
 package controllers;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 import entities.Expense;
 import entities.Income;
 import entities.Transaction;
@@ -14,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import utils.DatabaseConn;
 /**
  * Clasa pentru functionalitatea de editare tranzactie
  */
@@ -87,7 +92,7 @@ public class EditCtrl {
      * Casuta pentru selectare a tipului de tranzactie
      */
     @FXML
-    private ComboBox select;
+    private ComboBox<String> select;
     /**
      * Container folosit pentru organizarea elementelor
      */
@@ -113,6 +118,9 @@ public class EditCtrl {
      * Adauga checkbox ul pentru tranzactie esentiala daca tranzactia e de tip "cheltuiala"
      */
     private void addEss() {
+    	if(essCb!=null) {
+    		grid.getChildren().remove(essCb);
+    	}
     	Label essLbl=new Label("Essential?");
     	essLbl.setStyle("-fx-text-fill: #6b6290; -fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book';");
     	essCb=new CheckBox();
@@ -195,13 +203,68 @@ public class EditCtrl {
     	select.setStyle("-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 2px; -fx-text-fill: #6b6290; -fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book'; -fx-background-colour: white; -fx-background-insets: 0; -fx-opaque: true; -fx-effect: null;");
     	if(transaction instanceof Income) {
     		select.setValue("Income");
+    		//clears row 6 to avoid overlapping
+        	grid.getChildren().removeIf(node->GridPane.getRowIndex(node)!=null && GridPane.getRowIndex(node)==6);
     		addSrc();
     		srcField.setText(((Income) transaction).getSource());
     	}
     	else if(transaction instanceof Expense) {
     		select.setValue("Expense");
+    		//clears row 6 to avoid overlapping
+        	grid.getChildren().removeIf(node->GridPane.getRowIndex(node)!=null && GridPane.getRowIndex(node)==6);
     		addEss();
-    		essCb.setSelected(((Expense) transaction).isEssential());
+    		boolean essVal=((Expense) transaction).isEssential();
+    		essCb.setSelected(essVal);
+
     	}
+    }
+    
+    @FXML
+    private void edit() {
+    	String name=nameField.getText();
+    	double amount=Double.parseDouble(amountField.getText());
+    	String category=categField.getText();
+    	String payment=paymentField.getText();
+    	boolean isSubscription=subBox.isSelected();
+    	boolean isExcluded=exclBox.isSelected();
+    	String type=(String) select.getValue();
+    	try(Connection conn=DatabaseConn.getConnection()){
+    		String query;
+    		query="UPDATE transactions SET name=?, amount=?, category=?, paymentMethod=?, subscription=?, excludedFromReport=?, transactionType=? WHERE transactionID=?";
+    		try(PreparedStatement stmt=conn.prepareStatement(query)){
+				stmt.setString(1, name);
+				stmt.setDouble(2, amount);
+				stmt.setString(3, category);
+				stmt.setString(4, payment);
+				stmt.setBoolean(5, isSubscription);
+				stmt.setBoolean(6, isExcluded);
+				stmt.setString(7, type);
+				stmt.setInt(8, transaction.getID());
+				stmt.executeUpdate();
+			}
+    		
+    		if("Income".equals(type)) {
+    			String source=srcField.getText();
+    			query="UPDATE transactions SET source=?, essential=NULL WHERE transactionID=?";
+    			try(PreparedStatement stmt=conn.prepareStatement(query)){
+    				stmt.setString(1, source!=null ? source:"");
+    				stmt.setInt(2, transaction.getID());
+    				stmt.executeUpdate();
+    			}
+    		}
+    		else if("Expense".equals(type)) {
+    			boolean isEssential=essCb.isSelected();
+    			query="UPDATE transactions SET essential=?, source=NULL WHERE transactionID=?";
+    			try(PreparedStatement stmt=conn.prepareStatement(query)){
+    				stmt.setBoolean(1, isEssential);
+    				stmt.setInt(2, transaction.getID());
+    				stmt.executeUpdate();
+    			}
+    		}
+    	}
+    	catch(SQLException e) {
+    		e.printStackTrace();
+    	}
+    	close();
     }
 }
