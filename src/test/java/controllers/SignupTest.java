@@ -29,7 +29,7 @@ class SignupTest {
 
     @Test
     void addUserValid() {
-        String username="new";
+        String username="neww";
         String password="pass";
         boolean result=signup.addUser(username, password);
         assertTrue(result);
