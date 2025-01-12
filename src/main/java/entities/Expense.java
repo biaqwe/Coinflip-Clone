@@ -42,4 +42,11 @@ public class Expense extends Transaction{
 	public void flipEssential() {
 		essential=!(essential);
 	}
+	/**
+	 * Seteaza daca cheluiala e esentiala sau nu
+	 * @param e daca tranzactia e esentiala sau nu
+	 */
+	public void setEssential(boolean e) {
+		essential=e;
+	}
 }
