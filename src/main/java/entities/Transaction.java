@@ -119,6 +119,13 @@ public class Transaction {
 		return excludedFromReport;
 	}
 	/**
+	 * Seteaza id ul tranzactiei
+	 * @param id id ul tranzactiei
+	 */
+	public void setID(int id) {
+		transactionID=id;
+	}
+	/**
 	 * Seteaza valoarea numelui
 	 * @param n valoarea numelui
 	 */
@@ -164,6 +171,13 @@ public class Transaction {
 	 */
 	public void flipExcluded() {
 		excludedFromReport=!(excludedFromReport);
+	}
+	/**
+	 * Seteaza daca tranzactia va fi exclusa din raport
+	 * @param e daca tranzactia este sau nu exclusa din raport
+	 */
+	public void setExcluded(boolean e) {
+		excludedFromReport=e;
 	}
 	/**
 	 * Metoda de afisare
