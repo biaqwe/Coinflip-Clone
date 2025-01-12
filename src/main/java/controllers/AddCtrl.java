@@ -90,7 +90,7 @@ public class AddCtrl {
      * Casuta pentru selectare a tipului de tranzactie
      */
     @FXML
-	private ComboBox select;
+	private ComboBox<String> select;
     /**
      * Grid folosit pentru organizarea elementelor
      */
