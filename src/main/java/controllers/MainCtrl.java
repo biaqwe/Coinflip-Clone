@@ -60,6 +60,52 @@ public class MainCtrl {
         }
     }
     /**
+	 * Butonul pentru accesarea paginii cu rapoarte
+	 */
+    @FXML
+    private Button reportBtn;
+    /**
+     * Redirectioneaza utilizatorul pe pagina cu rapoarte dupa apasarea butonului
+     */
+    @FXML
+    private void report() {
+        try {
+        	FXMLLoader loader=new FXMLLoader(getClass().getResource("/pages/Report.fxml"));
+            Parent root=loader.load();
+            String css = getClass().getResource("/resources/application.css").toExternalForm();
+            root.getStylesheets().add(css);
+            Stage stage=(Stage) reportBtn.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+	 * Butonul pentru accesarea paginii cu abonamente
+	 */
+    @FXML
+    private Button subsBtn;
+    /**
+     * Redirectioneaza utilizatorul pe pagina cu abonamente dupa apasarea butonului
+     */
+    @FXML
+    private void subs() {
+        try {
+        	FXMLLoader loader=new FXMLLoader(getClass().getResource("/pages/Subs.fxml"));
+            Parent root=loader.load();
+            String css = getClass().getResource("/resources/application.css").toExternalForm();
+            root.getStylesheets().add(css);
+            Stage stage=(Stage) subsBtn.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+    /**
      * Buton pentru deschiderea paginii de adaugare tranzactie
      */
     @FXML
@@ -296,12 +342,14 @@ public class MainCtrl {
                 boolean excluded=result.getInt("excludedFromReport") == 1;
                 String transactionType=result.getString("transactionType");
                 String source=result.getString("source");
-                boolean essential=result.getInt("essential") == 1;
+                int essentialVal=result.getInt("essential");
+                boolean essential=essentialVal==1;
                 if("income".equalsIgnoreCase(transactionType)) { //add income object
         			transactions.add(new Income(transactionID, name, amount, category, paymentMethod, date, false, excluded, source));
         		}
                 else if("expense".equalsIgnoreCase(transactionType)) {//add expeense object
-                	transactions.add(new Expense(transactionID, name, amount, category, paymentMethod, date, essential, excluded, false));
+                	Expense expense=new Expense(transactionID, name, amount, category, paymentMethod, date, essential, excluded, essential);
+                	transactions.add(expense);
                 }
     		}
     	}
