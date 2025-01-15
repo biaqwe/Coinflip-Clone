@@ -14,18 +14,22 @@ import java.util.Map;
 import entities.Expense;
 import entities.Income;
 import entities.Transaction;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Side;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
@@ -229,75 +233,93 @@ public class ReportCtrl {
 
     @FXML
     private void generate() {
-    	Integer y=ySelect.getValue();
-    	String m=mSelect.getValue();
-    	if(y==null || m==null) {
-    		System.out.println("Year or month not selected");
-    		return;
-    	}
-    	System.out.println("Selected Year: "+y+" Selected Month: "+m);
-    	int mIndex=mSelect.getItems().indexOf(m)+1;
-    	List<Transaction> transactions=fetchTransactions(y, mIndex);
-    	System.out.println("Transactions count: "+transactions.size());
-    	box.getChildren().clear();
-    	box.setAlignment(Pos.CENTER);
-    	if(transactions.isEmpty()) {
-    		Text nope=new Text("No transactions found for "+m+" "+y);
-    		VBox.setMargin(nope, new Insets(50, 0, 0, 0));
-    		box.getChildren().add(nope);
-    	}
-    	else {
-    		double totalEarned=0;
-    		double totalSpent=0;
-    		int essExp=0;
-    		for(Transaction transaction:transactions) {
-    			if(transaction instanceof Income) {
-    				totalEarned+=transaction.getAmount();
-    			}
-    			else if(transaction instanceof Expense) {
-    				totalSpent+=transaction.getAmount();
-    				if(((Expense) transaction).isEssential()) {
-    					essExp++;
-    				}
-    			}
-    		}
-    		double savings=totalEarned-totalSpent;
-    		Map<String, Double> categMap=new HashMap<>();
-    		for(Transaction transaction:transactions) {
-    			if(transaction instanceof Expense) {
-    				categMap.merge(transaction.getCategory(), transaction.getAmount(), Double::sum);
-    			}
-    		}
-    		List<Map.Entry<String, Double>> categSort=new ArrayList<>(categMap.entrySet());
-    		categSort.sort((a, b)->Double.compare(b.getValue(), a.getValue()));
-    		PieChart pieChart=new PieChart();
-    		PieChart.Data incomeData=new PieChart.Data("Income", totalEarned);
-    		PieChart.Data expensesData=new PieChart.Data("Expenses", totalSpent);
-    		pieChart.getData().addAll(incomeData, expensesData);
-    		pieChart.setLegendVisible(true);
-    		pieChart.setTitle(m+" "+y+" Report");
-    		pieChart.setStyle("-fx-font-family: 'HirukoPro-Book'; -fx-font-size: 14px;");
-    		pieChart.lookup(".chart-title").setStyle("-fx-font-family: 'HirukoPro-Book'; -fx-font-size: 20px; -fx-text-fill: black;");
-    		pieChart.lookup(".chart-legend").setStyle("-fx-font-family: 'HirukoPro-Book'; -fx-font-size: 16px; -fx-text-fill: #6b6290;");
-    		incomeData.getNode().setStyle("-fx-pie-color: #aad8b9;");
-    		expensesData.getNode().setStyle("-fx-pie-color: #d9aeac;");
-	    	VBox reportBox=new VBox(10);
-	    	reportBox.setStyle("-fx-padding: 20px; -fx-background-color: rgba(255, 255, 255, 0.8); -fx-background-radius: 20; -fx-pref-width: 350; -fx-pref-height: 110;");
-	    	reportBox.setAlignment(Pos.CENTER_LEFT);
-	    	Text totalEarnedTxt=new Text("Total Earned: "+new DecimalFormat("#,##0.00").format(totalEarned));
-	    	totalEarnedTxt.setStyle("-fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book'; -fx-text-fill: #6b6290;");
-	    	Text totalSpentTxt=new Text("Total Spent: "+new DecimalFormat("#,##0.00").format(totalSpent));
-	    	totalSpentTxt.setStyle("-fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book'; -fx-text-fill: #6b6290;");
-	    	Text essExpTxt=new Text("Number of essential expenses: "+essExp);
-	    	essExpTxt.setStyle("-fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book'; -fx-text-fill: #6b6290;");
-	    	Text savingsTxt=new Text("Savings: "+new DecimalFormat("#,##0.00").format(savings));
-	    	savingsTxt.setStyle("-fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book'; -fx-text-fill: #6b6290;");
-	    	Text topCategTxt=new Text("Top Expense Category: "+(categSort.isEmpty() ? "None":categSort.get(0).getKey()));
-	    	topCategTxt.setStyle("-fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book'; -fx-text-fill: #6b6290;");
-	    	reportBox.getChildren().addAll(pieChart, totalEarnedTxt, totalSpentTxt, savingsTxt, essExpTxt, topCategTxt);
-	    	VBox.setMargin(reportBox, new Insets(50, 0, 0, 28));
-	    	box.getChildren().add(reportBox);
-    	}
+        Integer y=ySelect.getValue();
+        String m=mSelect.getValue();
+        if(y==null || m==null) {
+            System.out.println("Year or month not selected");
+            return;
+        }
+        System.out.println("Selected Year: "+y+" Selected Month: "+m);
+        int mIndex=mSelect.getItems().indexOf(m)+1;
+        List<Transaction> transactions=fetchTransactions(y, mIndex);
+        System.out.println("Transactions count: "+transactions.size());
+        box.getChildren().clear();
+        box.setAlignment(Pos.CENTER);
+
+        VBox reportBox=new VBox(10);
+        reportBox.setStyle("-fx-padding: 20px; -fx-background-color: rgba(255, 255, 255, 0.8); -fx-background-radius: 20; -fx-pref-width: 350; -fx-pref-height: 110; -fx-text-fill: #6b6290;");
+        reportBox.setAlignment(Pos.CENTER_LEFT);
+
+        if(transactions.isEmpty()) {
+            Text noDataTxt=new Text("No transactions found for\n"+m+" "+y);
+            noDataTxt.setStyle("-fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book'; -fx-text-fill: #6b6290;");
+            noDataTxt.setFill(javafx.scene.paint.Color.valueOf("#6b6290"));
+            reportBox.getChildren().add(noDataTxt);
+        }
+        else {
+            double totalEarned=0;
+            double totalSpent=0;
+            int essExp=0;
+            for(Transaction transaction:transactions) {
+                if(transaction instanceof Income) {
+                    totalEarned+=transaction.getAmount();
+                }
+                else if (transaction instanceof Expense) {
+                    totalSpent+=transaction.getAmount();
+                    if(((Expense) transaction).isEssential()) {
+                        essExp++;
+                    }
+                }
+            }
+            
+            //savings
+            double savings=totalEarned-totalSpent;
+
+            //top categ
+            Map<String, Double> categMap=new HashMap<>();
+            for(Transaction transaction:transactions) {
+                if(transaction instanceof Expense) {
+                    categMap.merge(transaction.getCategory(), transaction.getAmount(), Double::sum);
+                }
+            }
+            List<Map.Entry<String, Double>> categSort=new ArrayList<>(categMap.entrySet());
+            categSort.sort((a, b)->Double.compare(b.getValue(), a.getValue()));
+
+            // piecharttt
+            PieChart pieChart=new PieChart();
+            PieChart.Data incomeData=new PieChart.Data("Incomes", totalEarned);
+            PieChart.Data expensesData=new PieChart.Data("Expenses", totalSpent);
+            pieChart.getData().addAll(incomeData, expensesData);
+            pieChart.setLegendVisible(true);
+            pieChart.setTitle(m+" "+y+" Report");
+            pieChart.setStyle("-fx-font-family: 'HirukoPro-Book'; -fx-font-size: 14px; -fx-text-fill: #6b6290;");
+            pieChart.lookup(".chart-title").setStyle("-fx-font-family: 'HirukoPro-Book'; -fx-font-size: 20px; -fx-text-fill: #6b6290;");
+            incomeData.getNode().setStyle("-fx-pie-color: #aad8b9;");
+            expensesData.getNode().setStyle("-fx-pie-color: #d9aeac;");
+
+            Text totalEarnedTxt=new Text("Total Earned: "+new DecimalFormat("#,##0.00").format(totalEarned));
+            totalEarnedTxt.setStyle("-fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book'; -fx-text-fill: #6b6290;");
+            totalEarnedTxt.setFill(javafx.scene.paint.Color.valueOf("#6b6290"));
+
+            Text totalSpentTxt=new Text("Total Spent: "+new DecimalFormat("#,##0.00").format(totalSpent));
+            totalSpentTxt.setStyle("-fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book'; -fx-text-fill: #6b6290;");
+            totalSpentTxt.setFill(javafx.scene.paint.Color.valueOf("#6b6290"));
+
+            Text essExpTxt=new Text("Number of essential expenses: "+essExp);
+            essExpTxt.setStyle("-fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book'; -fx-text-fill: #6b6290;");
+            essExpTxt.setFill(javafx.scene.paint.Color.valueOf("#6b6290"));
+
+            Text savingsTxt=new Text("Savings: "+new DecimalFormat("#,##0.00").format(savings));
+            savingsTxt.setStyle("-fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book'; -fx-text-fill: #6b6290;");
+            savingsTxt.setFill(javafx.scene.paint.Color.valueOf("#6b6290"));
+
+            Text topCategTxt=new Text("Top Expense Category: "+(categSort.isEmpty()?"None":categSort.get(0).getKey()));
+            topCategTxt.setStyle("-fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book'; -fx-text-fill: #6b6290;");
+            topCategTxt.setFill(javafx.scene.paint.Color.valueOf("#6b6290"));
+
+            reportBox.getChildren().addAll(pieChart, totalEarnedTxt, totalSpentTxt, savingsTxt, essExpTxt, topCategTxt);
+        }
+        VBox.setMargin(reportBox, new Insets(50, 0, 0, 28));
+        box.getChildren().add(reportBox);
     }
-    
 }
