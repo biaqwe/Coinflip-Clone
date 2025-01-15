@@ -37,3 +37,9 @@
 .combo-box .editable-input {
     -fx-text-fill: #6b6290;
 }
+
+.chart-legend .label {
+    -fx-font-family: 'HirukoPro-Book';
+    -fx-font-size: 16px;
+    -fx-text-fill: #6b6290;
+}
