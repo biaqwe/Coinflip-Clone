@@ -33,7 +33,7 @@
                </children>
             </HBox>
             
-            <Button fx:id="gen" onAction="#generate" prefHeight="40.0" prefWidth="150.0" style="-fx-background-radius: 30px; -fx-background-color: #ffd091; -fx-cursor: hand; -fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book'; -fx-text-fill: #6b6290;" text="Generate" />
+            <Button fx:id="gen" onAction="#generate" prefHeight="40.0" prefWidth="150.0" style="-fx-background-radius: 30px; -fx-background-color: #c67ac8; -fx-cursor: hand; -fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book'; -fx-text-fill: white;" text="Generate" />
          </children>
       </VBox>
    </children>
