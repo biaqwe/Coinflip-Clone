@@ -38,6 +38,10 @@ public class Transaction {
 	 */
 	private boolean excludedFromReport;
 	/**
+	 * Moneda tranzactiei
+	 */
+	private String currency;
+	/**
 	 * Constructor implicit
 	 */
 	public Transaction() {}
@@ -51,8 +55,9 @@ public class Transaction {
 	 * @param d data in care a fost efectuata tranzactia
 	 * @param s indica daca tranzactia e de tip abonament
 	 * @param e indica daca tranzactia e exclusa din raport
+	 * @param cr moneda tranzactiei
 	 */
-	public Transaction(int id, String n, double a, String c, String p, LocalDate d, boolean s, boolean e) {
+	public Transaction(int id, String n, double a, String c, String p, LocalDate d, boolean s, boolean e, String cr) {
 		transactionID=id;
 		name=n;
 		amount=a;
@@ -61,6 +66,7 @@ public class Transaction {
 		date=d;
 		subscription=s;
 		excludedFromReport=e;
+		currency=cr;
 	}
 	/**
 	 * Returneaza id ul tranzactiei
@@ -117,6 +123,13 @@ public class Transaction {
 	 */
 	public boolean isExcluded() {
 		return excludedFromReport;
+	}
+	/**
+	 * Returneaza moneda tranzactiei
+	 * @return moneda tranzactiei
+	 */
+	public String getCurrency() {
+		return currency;
 	}
 	/**
 	 * Seteaza id ul tranzactiei
@@ -178,6 +191,13 @@ public class Transaction {
 	 */
 	public void setExcluded(boolean e) {
 		excludedFromReport=e;
+	}
+	/**
+	 * Seteaza moneda tranzactiei
+	 * @param cr moneda tranzactiei
+	 */
+	public void setCurrency(String cr) {
+		currency=cr;
 	}
 	/**
 	 * Metoda de afisare

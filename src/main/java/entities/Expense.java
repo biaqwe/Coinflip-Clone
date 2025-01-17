@@ -25,8 +25,8 @@ public class Expense extends Transaction{
 	 * @param e indica daca tranzactia e exclusa din raport
 	 * @param es indica daca tranzactia e esentiala 
 	 */
-	public Expense(int id, String n, double a, String c, String p, LocalDate d, boolean s, boolean e, boolean es) {
-		super(id, n, a, c, p, d, s, e);
+	public Expense(int id, String n, double a, String c, String p, LocalDate d, boolean s, boolean e, String cr, boolean es) {
+		super(id, n, a, c, p, d, s, e, cr);
 		essential=es;
 	}
 	/**

@@ -26,8 +26,8 @@ public class Income extends Transaction{
 	 * @param e indica daca tranzactia e exclusa din raport
 	 * @param src sursa tranzactiei
 	 */
-	public Income(int id, String n, double a, String c, String p, LocalDate d, boolean s, boolean e, String src) {
-		super(id, n, a, c, p, d, s, e);
+	public Income(int id, String n, double a, String c, String p, LocalDate d, boolean s, boolean e, String cr, String src) {
+		super(id, n, a, c, p, d, s, e, cr);
 		source=src;
 	}
 	/**
