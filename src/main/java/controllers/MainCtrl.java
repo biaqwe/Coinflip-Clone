@@ -202,7 +202,8 @@ public class MainCtrl {
         }
         //format amount to string
         DecimalFormat df=new DecimalFormat("#,###.00"); // , as thousand separator + always 2 decimals
-        String amountStr=df.format(transaction.getAmount());
+        String currency=transaction.getCurrency()!=null ? transaction.getCurrency():"";
+        String amountStr=df.format(transaction.getAmount())+" "+currency;
         Text amount=new Text(amountStr);
         amount.setFill(javafx.scene.paint.Color.valueOf("#6b6290"));
         amount.setFont(new Font("HirukoPro-Book", 18));
@@ -356,13 +357,14 @@ public class MainCtrl {
                 String transactionType=result.getString("transactionType");
                 String source=result.getString("source");
                 int essentialVal=result.getInt("essential");
+                String currency=result.getString("currency");
                 boolean essential=essentialVal==1;
     			
                 if("income".equalsIgnoreCase(transactionType)) {
-                	filtered.add(new Income(transactionID, name, amount, transactionCategory, paymentMethod, date, false, excluded, source));
+                	filtered.add(new Income(transactionID, name, amount, transactionCategory, paymentMethod, date, false, excluded, currency, source));
                 }
                 else if("expense".equalsIgnoreCase(transactionType)) {
-                	filtered.add(new Expense(transactionID, name, amount, transactionCategory, paymentMethod, date, essential, excluded, essential));
+                	filtered.add(new Expense(transactionID, name, amount, transactionCategory, paymentMethod, date, essential, excluded, currency, essential));
                 }
     		}
     	}
@@ -398,13 +400,14 @@ public class MainCtrl {
                 boolean excluded=result.getInt("excludedFromReport")==1;
                 String source=result.getString("source");
                 int essentialVal=result.getInt("essential");
+                String currency=result.getString("currency");
                 boolean essential=essentialVal==1;
     			
                 if("income".equalsIgnoreCase(transactionType)) {
-                	filtered.add(new Income(transactionID, name, amount, transactionCategory, paymentMethod, date, false, excluded, source));
+                	filtered.add(new Income(transactionID, name, amount, transactionCategory, paymentMethod, date, false, excluded, currency, source));
                 }
                 else if("expense".equalsIgnoreCase(transactionType)) {
-                	filtered.add(new Expense(transactionID, name, amount, transactionCategory, paymentMethod, date, essential, excluded, essential));
+                	filtered.add(new Expense(transactionID, name, amount, transactionCategory, paymentMethod, date, essential, excluded, currency, essential));
                 }
     		}
     	}
@@ -457,13 +460,14 @@ public class MainCtrl {
                 String transactionType=result.getString("transactionType");
                 String source=result.getString("source");
                 int essentialVal=result.getInt("essential");
+                String currency=result.getString("currency");
                 boolean essential=essentialVal==1;
     			
                 if("income".equalsIgnoreCase(transactionType)) {
-                	filtered.add(new Income(transactionID, name, amount, transactionCategory, paymentMethod, date, false, excluded, source));
+                	filtered.add(new Income(transactionID, name, amount, transactionCategory, paymentMethod, date, false, excluded, currency, source));
                 }
                 else if("expense".equalsIgnoreCase(transactionType)) {
-                	filtered.add(new Expense(transactionID, name, amount, transactionCategory, paymentMethod, date, essential, excluded, essential));
+                	filtered.add(new Expense(transactionID, name, amount, transactionCategory, paymentMethod, date, essential, excluded, currency, essential));
                 }
     		}
     	}
@@ -515,11 +519,12 @@ public class MainCtrl {
                 String source=result.getString("source");
                 int essentialVal=result.getInt("essential");
                 boolean essential=essentialVal==1;
+                String currency=result.getString("currency");
                 if("income".equalsIgnoreCase(transactionType)) { //add income object
-        			transactions.add(new Income(transactionID, name, amount, category, paymentMethod, date, false, excluded, source));
+        			transactions.add(new Income(transactionID, name, amount, category, paymentMethod, date, false, excluded, currency, source));
         		}
                 else if("expense".equalsIgnoreCase(transactionType)) {//add expeense object
-                	Expense expense=new Expense(transactionID, name, amount, category, paymentMethod, date, essential, excluded, essential);
+                	Expense expense=new Expense(transactionID, name, amount, category, paymentMethod, date, essential, excluded, currency, essential);
                 	transactions.add(expense);
                 }
     		}
