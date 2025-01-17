@@ -175,58 +175,44 @@ public class ReportCtrl {
     
     private List<Transaction> fetchTransactions(int y, int m) {
         List<Transaction> transactions=new ArrayList<>();
-        String query="SELECT * FROM transactions WHERE userID=?";
+        String query = "SELECT * FROM transactions WHERE userID=? AND excludedFromReport=false";
         try(Connection conn=DatabaseConn.getConnection(); PreparedStatement stmt=conn.prepareStatement(query)) {
             stmt.setInt(1, Session.getUID());
             ResultSet rs=stmt.executeQuery();
             while(rs.next()) {
                 LocalDate transactionDate=rs.getDate("date").toLocalDate();
-                System.out.println("Transaction Date: " + transactionDate);
                 if(transactionDate.getYear()==y && transactionDate.getMonthValue()==m) {
-                    System.out.println("Transaction matches "+rs.getInt("transactionID"));
                     String type=rs.getString("transactionType");
-                    System.out.println("Transaction Type: " + type);
-                    try {
-                        if("Income".equalsIgnoreCase(type)) {
-                            Income income=new Income();
-                            income.setID(rs.getInt("transactionID"));
-                            income.setName(rs.getString("name"));
-                            income.setAmount(rs.getDouble("amount"));
-                            income.setCategory(rs.getString("category"));
-                            income.setPayment(rs.getString("paymentMethod"));
-                            income.setExcluded(rs.getBoolean("excludedFromReport"));
-                            income.setSource(rs.getString("source"));
-                            System.out.println("Adding Income: "+income.getName());
-                            transactions.add(income);
-                        }
-                        else if("Expense".equalsIgnoreCase(type)) {
-                            Expense expense=new Expense();
-                            expense.setID(rs.getInt("transactionID"));
-                            expense.setName(rs.getString("name"));
-                            expense.setAmount(rs.getDouble("amount"));
-                            expense.setCategory(rs.getString("category"));
-                            expense.setPayment(rs.getString("paymentMethod"));
-                            expense.setExcluded(rs.getBoolean("excludedFromReport"));
-                            expense.setEssential(rs.getBoolean("essential"));
-                            System.out.println("Adding Expense: "+expense.getName());
-                            transactions.add(expense);
-                        }
+                    String currency=rs.getString("currency");
+                    if("Income".equalsIgnoreCase(type)) {
+                        Income income=new Income();
+                        income.setID(rs.getInt("transactionID"));
+                        income.setName(rs.getString("name"));
+                        income.setAmount(rs.getDouble("amount"));
+                        income.setCategory(rs.getString("category"));
+                        income.setPayment(rs.getString("paymentMethod"));
+                        income.setExcluded(rs.getBoolean("excludedFromReport"));
+                        income.setSource(rs.getString("source"));
+                        income.setCurrency(currency);
+                        transactions.add(income);
                     }
-                    catch(Exception e) {
-                        e.printStackTrace();
+                    else if("Expense".equalsIgnoreCase(type)) {
+                        Expense expense=new Expense();
+                        expense.setID(rs.getInt("transactionID"));
+                        expense.setName(rs.getString("name"));
+                        expense.setAmount(rs.getDouble("amount"));
+                        expense.setCategory(rs.getString("category"));
+                        expense.setPayment(rs.getString("paymentMethod"));
+                        expense.setExcluded(rs.getBoolean("excludedFromReport"));
+                        expense.setEssential(rs.getBoolean("essential"));
+                        expense.setCurrency(currency);
+                        transactions.add(expense);
                     }
-                }
-                else {
-                    System.out.println("Transaction doesn’t match "+rs.getInt("transactionID"));
                 }
             }
         }
-        catch(Exception e) {
+        catch (Exception e) {
             e.printStackTrace();
-        }
-        System.out.println("Transactions fetched: "+transactions.size());
-        for(Transaction t:transactions) {
-            System.out.println("Transaction: "+t);
         }
         return transactions;
     }
@@ -257,51 +243,91 @@ public class ReportCtrl {
             reportBox.getChildren().add(noDataTxt);
         }
         else {
+            Map<String, Double> exchange=Map.of(
+                "USD", 1.08,
+                "EUR", 1.0,
+                "RON", 4.95,
+                "GBP", 0.85,
+                "JPY", 142.0,
+                "INR", 88.0
+            );
             double totalEarned=0;
             double totalSpent=0;
             int essExp=0;
-            for(Transaction transaction:transactions) {
-                if(transaction instanceof Income) {
-                    totalEarned+=transaction.getAmount();
+
+            for(Transaction transaction : transactions) {
+                String currency=transaction.getCurrency();
+                if(currency==null || !exchange.containsKey(currency)) {
+                    System.out.println("Skipping transaction with invalid currency: "+transaction.getName());
+                    continue;
                 }
-                else if (transaction instanceof Expense) {
-                    totalSpent+=transaction.getAmount();
+
+                double rate=exchange.get(currency);
+                double converted=transaction.getAmount()/rate;
+
+                if(transaction instanceof Income) {
+                    totalEarned+=converted;
+                }
+                else if(transaction instanceof Expense) {
+                    totalSpent-=converted;
                     if(((Expense) transaction).isEssential()) {
                         essExp++;
                     }
                 }
             }
-            
             //savings
             double savings=totalEarned-totalSpent;
 
             //top categ
             Map<String, Double> categMap=new HashMap<>();
-            for(Transaction transaction:transactions) {
+            for(Transaction transaction : transactions) {
                 if(transaction instanceof Expense) {
-                    categMap.merge(transaction.getCategory(), transaction.getAmount(), Double::sum);
+                    String currency=transaction.getCurrency();
+                    if(currency==null || !exchange.containsKey(currency)) {
+                    	continue;
+                    }
+                    double rate=exchange.get(currency);
+                    double convertedAmount=transaction.getAmount()/rate;
+                    categMap.merge(transaction.getCategory(), convertedAmount, Double::sum);
                 }
             }
             List<Map.Entry<String, Double>> categSort=new ArrayList<>(categMap.entrySet());
-            categSort.sort((a, b)->Double.compare(b.getValue(), a.getValue()));
+            categSort.sort((a, b) -> Double.compare(b.getValue(), a.getValue()));
 
             // piecharttt
             PieChart pieChart=new PieChart();
-            PieChart.Data incomeData=new PieChart.Data("Incomes", totalEarned);
-            PieChart.Data expensesData=new PieChart.Data("Expenses", totalSpent);
-            pieChart.getData().addAll(incomeData, expensesData);
+            if(totalEarned>0) {
+                PieChart.Data incomeData=new PieChart.Data("Incomes", totalEarned);
+                pieChart.getData().add(incomeData);
+                Platform.runLater(()-> {
+                    if(incomeData.getNode()!=null) {
+                        incomeData.getNode().setStyle("-fx-pie-color: #aad8b9;");
+                    }
+                });
+            }
+            if(totalSpent!=0) {
+                PieChart.Data expensesData=new PieChart.Data("Expenses", Math.abs(totalSpent));
+                pieChart.getData().add(expensesData);
+                Platform.runLater(()-> {
+                    if(expensesData.getNode()!=null) {
+                        expensesData.getNode().setStyle("-fx-pie-color: #d9aeac;");
+                    }
+                });
+            }
             pieChart.setLegendVisible(true);
             pieChart.setTitle(m+" "+y+" Report");
             pieChart.setStyle("-fx-font-family: 'HirukoPro-Book'; -fx-font-size: 14px; -fx-text-fill: #6b6290;");
-            pieChart.lookup(".chart-title").setStyle("-fx-font-family: 'HirukoPro-Book'; -fx-font-size: 20px; -fx-text-fill: #6b6290;");
-            incomeData.getNode().setStyle("-fx-pie-color: #aad8b9;");
-            expensesData.getNode().setStyle("-fx-pie-color: #d9aeac;");
+            Platform.runLater(()-> {
+                if(pieChart.lookup(".chart-title")!=null) {
+                    pieChart.lookup(".chart-title").setStyle("-fx-font-family: 'HirukoPro-Book'; -fx-font-size: 20px; -fx-text-fill: #6b6290;");
+                }
+            });
 
-            Text totalEarnedTxt=new Text("Total Earned: "+new DecimalFormat("#,##0.00").format(totalEarned));
+            Text totalEarnedTxt=new Text("Total Earned: "+new DecimalFormat("#,##0.00").format(totalEarned)+" EUR");
             totalEarnedTxt.setStyle("-fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book'; -fx-text-fill: #6b6290;");
             totalEarnedTxt.setFill(javafx.scene.paint.Color.valueOf("#6b6290"));
 
-            Text totalSpentTxt=new Text("Total Spent: "+new DecimalFormat("#,##0.00").format(totalSpent));
+            Text totalSpentTxt=new Text("Total Spent: "+new DecimalFormat("#,##0.00").format(totalSpent)+" EUR");
             totalSpentTxt.setStyle("-fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book'; -fx-text-fill: #6b6290;");
             totalSpentTxt.setFill(javafx.scene.paint.Color.valueOf("#6b6290"));
 
@@ -309,7 +335,7 @@ public class ReportCtrl {
             essExpTxt.setStyle("-fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book'; -fx-text-fill: #6b6290;");
             essExpTxt.setFill(javafx.scene.paint.Color.valueOf("#6b6290"));
 
-            Text savingsTxt=new Text("Savings: "+new DecimalFormat("#,##0.00").format(savings));
+            Text savingsTxt=new Text("Savings: "+new DecimalFormat("#,##0.00").format(savings)+" EUR");
             savingsTxt.setStyle("-fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book'; -fx-text-fill: #6b6290;");
             savingsTxt.setFill(javafx.scene.paint.Color.valueOf("#6b6290"));
 
@@ -322,4 +348,6 @@ public class ReportCtrl {
         VBox.setMargin(reportBox, new Insets(50, 0, 0, 28));
         box.getChildren().add(reportBox);
     }
+
+
 }
