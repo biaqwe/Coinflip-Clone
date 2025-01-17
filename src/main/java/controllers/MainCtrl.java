@@ -21,6 +21,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
@@ -52,6 +53,29 @@ public class MainCtrl {
             FXMLLoader loader=new FXMLLoader(getClass().getResource("/pages/Login.fxml"));
             Parent root=loader.load();
             Stage stage=(Stage) logoutBtn.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+	 * Butonul pentru accesarea paginii cu principale
+	 */
+    @FXML
+    private Button mainBtn;
+    /**
+     * Redirectioneaza utilizatorul pe pagina principala dupa apasarea butonului
+     */
+    @FXML
+    private void mainPage() {
+        try {
+        	FXMLLoader loader=new FXMLLoader(getClass().getResource("/pages/Main.fxml"));
+            Parent root=loader.load();
+            String css = getClass().getResource("/resources/application.css").toExternalForm();
+            root.getStylesheets().add(css);
+            Stage stage=(Stage) mainBtn.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
         }
@@ -164,6 +188,7 @@ public class MainCtrl {
 	        btn.setTextFill(javafx.scene.paint.Color.WHITE);
 	        btn.setFont(new Font("HirukoPro-Regular", 14));
 	        GridPane.setHalignment(btn, javafx.geometry.HPos.RIGHT);
+	        btn.setOnAction(e->filterByType("income"));
 	        grid.add(btn, 2, 0);
         }
         else {
@@ -172,6 +197,7 @@ public class MainCtrl {
 	        btn.setTextFill(javafx.scene.paint.Color.WHITE);
 	        btn.setFont(new Font("HirukoPro-Regular", 14));
 	        GridPane.setHalignment(btn, javafx.geometry.HPos.RIGHT);
+	        btn.setOnAction(e->filterByType("expense"));
 	        grid.add(btn, 2, 0);
         }
         //format amount to string
@@ -197,6 +223,7 @@ public class MainCtrl {
         categ.setFont(new Font("HirukoPro-Regular", 14));
         GridPane.setHalignment(categ, javafx.geometry.HPos.LEFT);
         grid.add(categ, 0, 2);
+        categ.setOnAction(e->filterByCateg(transaction.getCategory()));
         
         if(transaction instanceof Income income) { //if transaction is income add source button
             Button src=new Button(income.getSource());
@@ -303,6 +330,150 @@ public class MainCtrl {
     }
     
     /**
+     * Filtreaza tranzactiile de pe pagina dupa categorie
+     * @param category categoria dupa care vor fi filtrate tranzactiile
+     */
+    private void filterByCateg(String category) {
+    	List<Transaction> filtered=new ArrayList<>();
+    	int userID=Session.getUID();
+    	if(userID==-1) {
+    		System.out.println("User not logged in");
+    		return;
+    	}
+    	String query="SELECT * FROM transactions WHERE userID=? AND category=? ORDER BY transactionID DESC";
+    	try(Connection connection=DatabaseConn.getConnection(); PreparedStatement stmt=connection.prepareStatement(query)){
+    		stmt.setInt(1, userID);
+    		stmt.setString(2, category);
+    		ResultSet result=stmt.executeQuery();
+    		while(result.next()) {
+    			int transactionID=result.getInt("transactionID");
+                String name=result.getString("name");
+                double amount=result.getDouble("amount");
+                String transactionCategory=result.getString("category");
+                String paymentMethod=result.getString("paymentMethod");
+                LocalDate date=result.getDate("date").toLocalDate();
+                boolean excluded=result.getInt("excludedFromReport")==1;
+                String transactionType=result.getString("transactionType");
+                String source=result.getString("source");
+                int essentialVal=result.getInt("essential");
+                boolean essential=essentialVal==1;
+    			
+                if("income".equalsIgnoreCase(transactionType)) {
+                	filtered.add(new Income(transactionID, name, amount, transactionCategory, paymentMethod, date, false, excluded, source));
+                }
+                else if("expense".equalsIgnoreCase(transactionType)) {
+                	filtered.add(new Expense(transactionID, name, amount, transactionCategory, paymentMethod, date, essential, excluded, essential));
+                }
+    		}
+    	}
+    	catch(Exception e) {
+    		e.printStackTrace();
+    	}
+    	displayCards(filtered);
+    }
+    
+    /**
+     * Filtreaza tranzactiile de pe pagina dupa tipul de tranzactie (venit/cheltuiala)
+     * @param transactionType tipul dupa care vor fi filtrate tranzactiile
+     */
+    private void filterByType(String transactionType) {
+    	List<Transaction> filtered=new ArrayList<>();
+    	int userID=Session.getUID();
+    	if(userID==-1) {
+    		System.out.println("User not logged in");
+    		return;
+    	}
+    	String query="SELECT * FROM transactions WHERE userID=? AND transactionType=? ORDER BY transactionID DESC";
+    	try(Connection connection=DatabaseConn.getConnection(); PreparedStatement stmt=connection.prepareStatement(query)){
+    		stmt.setInt(1, userID);
+    		stmt.setString(2, transactionType);
+    		ResultSet result=stmt.executeQuery();
+    		while(result.next()) {
+    			int transactionID=result.getInt("transactionID");
+                String name=result.getString("name");
+                double amount=result.getDouble("amount");
+                String transactionCategory=result.getString("category");
+                String paymentMethod=result.getString("paymentMethod");
+                LocalDate date=result.getDate("date").toLocalDate();
+                boolean excluded=result.getInt("excludedFromReport")==1;
+                String source=result.getString("source");
+                int essentialVal=result.getInt("essential");
+                boolean essential=essentialVal==1;
+    			
+                if("income".equalsIgnoreCase(transactionType)) {
+                	filtered.add(new Income(transactionID, name, amount, transactionCategory, paymentMethod, date, false, excluded, source));
+                }
+                else if("expense".equalsIgnoreCase(transactionType)) {
+                	filtered.add(new Expense(transactionID, name, amount, transactionCategory, paymentMethod, date, essential, excluded, essential));
+                }
+    		}
+    	}
+    	catch(Exception e) {
+    		e.printStackTrace();
+    	}
+    	displayCards(filtered);
+    }
+    /**
+     * Field ul pentru cautare
+     */
+    @FXML
+    private TextField searchF;
+    /**
+     * Butonul pentru cautare
+     */
+    @FXML
+    private Button searchBtn;
+    
+    /**
+     * Cauta tranzactiile dupa nume
+     */
+    @FXML
+    private void search() {
+    	String text=searchF.getText().trim();
+    	if(text.isEmpty()) {
+    		loadTransactions();
+    		return;
+    	}
+    	
+    	List<Transaction> filtered=new ArrayList<>();
+    	int userID=Session.getUID();
+    	if(userID==-1) {
+    		System.out.println("User not logged in");
+    		return;
+    	}
+    	String query="SELECT * FROM transactions WHERE userID=? AND LOWER(name) LIKE ? ORDER BY transactionID DESC";
+    	try(Connection connection=DatabaseConn.getConnection(); PreparedStatement stmt=connection.prepareStatement(query)){
+    		stmt.setInt(1, userID);
+    		stmt.setString(2, "%"+text.toLowerCase()+"%");
+    		ResultSet result=stmt.executeQuery();
+    		while(result.next()) {
+    			int transactionID=result.getInt("transactionID");
+                String name=result.getString("name");
+                double amount=result.getDouble("amount");
+                String transactionCategory=result.getString("category");
+                String paymentMethod=result.getString("paymentMethod");
+                LocalDate date=result.getDate("date").toLocalDate();
+                boolean excluded=result.getInt("excludedFromReport")==1;
+                String transactionType=result.getString("transactionType");
+                String source=result.getString("source");
+                int essentialVal=result.getInt("essential");
+                boolean essential=essentialVal==1;
+    			
+                if("income".equalsIgnoreCase(transactionType)) {
+                	filtered.add(new Income(transactionID, name, amount, transactionCategory, paymentMethod, date, false, excluded, source));
+                }
+                else if("expense".equalsIgnoreCase(transactionType)) {
+                	filtered.add(new Expense(transactionID, name, amount, transactionCategory, paymentMethod, date, essential, excluded, essential));
+                }
+    		}
+    	}
+    	catch(Exception e) {
+    		e.printStackTrace();
+    	}
+    	displayCards(filtered);
+    }
+    
+    /**
      * Afiseaza cardurile tranzactiilor; elimina tot ce exista in container, dupa creeaza si adauga cate un card pentru fiecare tranzactie din lista
      * @param transactions lista de tranzactii care va fi afisata sub forma de carduri
      */
@@ -358,7 +529,6 @@ public class MainCtrl {
     	}
         displayCards(transactions);
     }
-
     /**
      * Initializeaza elementele interfetei
      */
@@ -366,7 +536,7 @@ public class MainCtrl {
     public void initialize() {
     	//more design stuff
         box.setAlignment(javafx.geometry.Pos.TOP_CENTER);
-        box.setPadding(new javafx.geometry.Insets(57, 0, 0, 0));
+        box.setPadding(new javafx.geometry.Insets(100, 0, 0, 0));
         scroll.setStyle("-fx-padding: 20px;");
         scroll.setFitToWidth(true);
         scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
