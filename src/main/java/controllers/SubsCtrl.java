@@ -3,6 +3,7 @@ package controllers;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -29,6 +30,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -106,6 +108,29 @@ public class SubsCtrl {
         }
     }
     /**
+	 * Butonul pentru accesarea paginii cu principale
+	 */
+    @FXML
+    private Button mainBtn;
+    /**
+     * Redirectioneaza utilizatorul pe pagina principala dupa apasarea butonului
+     */
+    @FXML
+    private void mainPage() {
+        try {
+        	FXMLLoader loader=new FXMLLoader(getClass().getResource("/pages/Main.fxml"));
+            Parent root=loader.load();
+            String css = getClass().getResource("/resources/application.css").toExternalForm();
+            root.getStylesheets().add(css);
+            Stage stage=(Stage) mainBtn.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+    /**
      * Buton pentru deschiderea paginii de adaugare tranzactie
      */
     @FXML
@@ -146,6 +171,38 @@ public class SubsCtrl {
     @FXML
     private Group createCard(Transaction transaction) {
         Group card=new Group();
+        VBox container=new VBox(10);
+        container.setAlignment(Pos.TOP_CENTER);
+        
+        if(transaction.isSubscription()) {
+        	HBox renewalWrapper=new HBox(10);
+        	renewalWrapper.setAlignment(Pos.CENTER);
+        	Line left=new Line(0, 0, 10, 0);
+        	left.setStroke(javafx.scene.paint.Color.valueOf("#6b6290"));
+        	left.setStrokeWidth(2);
+        	Line right=new Line(0, 0, 10, 0);
+        	right.setStroke(javafx.scene.paint.Color.valueOf("#6b6290"));
+        	right.setStrokeWidth(2);
+        	
+        	HBox renewalBox=new HBox(10);
+        	renewalBox.setAlignment(Pos.CENTER_LEFT);
+
+        	LocalDate next=transaction.getDate().plusMonths(1);
+        	Text renewalText=new Text("Next renewal on "+next.format(DateTimeFormatter.ofPattern("dd "+"MMM")));
+        	renewalText.setFill(javafx.scene.paint.Color.valueOf("#4a4a4a"));
+        	renewalText.setFont(new Font("HirukoPro-Book", 16));
+        	renewalBox.getChildren().add(renewalText);
+
+        	Button cancelSub=new Button("Cancel");
+        	cancelSub.setStyle("-fx-background-color: #c67ac8; -fx-background-radius: 20px; -fx-text-fill: white; -fx-font-size: 14px; -fx-cursor: hand; -fx-font-family: HirukoPro-Book");
+        	cancelSub.setOnAction(e->cancelSubscription(transaction));
+        	renewalBox.getChildren().add(cancelSub);
+
+        	renewalWrapper.getChildren().addAll(left, renewalBox, right);
+
+        	container.getChildren().add(renewalWrapper);
+        }
+        
         GridPane grid=new GridPane();
         //design stuff
         grid.setStyle("-fx-background-color: white; -fx-background-radius: 20px; -fx-padding: 10px;");
@@ -223,78 +280,22 @@ public class SubsCtrl {
         GridPane.setHalignment(excl, javafx.geometry.HPos.RIGHT);
         grid.add(excl, 2, 2);
         
-        VBox btns=new VBox(10);
-        btns.setAlignment(Pos.CENTER_LEFT);
-        btns.setStyle("-fx-padding: 2px;");
-        
-        Image editIcon=new Image(getClass().getResourceAsStream("/resources/edit.png"));
-        ImageView editIV=new ImageView(editIcon);
-        editIV.setFitWidth(17);
-        editIV.setFitHeight(20);
-        Button editBtn=new Button();
-        editBtn.setGraphic(editIV);
-        editBtn.setStyle("-fx-background-color: #c67ac8; -fx-text-fill: white; -fx-background-radius: 50%; -fx-min-width: 30px; -fx-min-height: 30px; -fx-cursor: hand;");
-        editBtn.setOnAction(e->edit(transaction));
-        btns.getChildren().add(editBtn);
-        
-        Image delIcon=new Image(getClass().getResourceAsStream("/resources/delete.png"));
-        ImageView delIV=new ImageView(delIcon);
-        delIV.setFitWidth(16);
-        delIV.setFitHeight(20);
-        Button delBtn=new Button();
-        delBtn.setGraphic(delIV);
-        delBtn.setStyle("-fx-background-color: #c67ac8; -fx-text-fill: white; -fx-background-radius: 50%; -fx-min-width: 30px; -fx-min-height: 30px; -fx-cursor: hand;");
-        delBtn.setOnAction(e->delete(transaction));
-        btns.getChildren().add(delBtn);
-        
-        HBox all=new HBox(1);
-        all.getChildren().addAll(grid, btns);
-        all.setAlignment(Pos.CENTER);
-        
-        card.getChildren().add(all);//add grid  pane to card
+        container.getChildren().add(grid);
+        card.getChildren().add(container);
         return card;
     }
-    /**
-     * Redirectioneaza utilizatorul pe pagina de editare tranzactie
-     * @param transaction tranzactia care va fi editata
-     */
-    public void edit(Transaction transaction) {
-    	try {
-            FXMLLoader loader=new FXMLLoader(getClass().getResource("/pages/Edit.fxml"));
-            Parent root=loader.load();
-            String css = getClass().getResource("/resources/application.css").toExternalForm();
-            EditCtrl editCtrl=loader.getController();
-            editCtrl.setTransaction(transaction);
-            root.getStylesheets().add(css);
-            Stage stage=(Stage) addBtn.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    /**
-     * Sterge o tranzactie din baza de date si de pe pagina
-     * @param transaction tranzactia care va fi stearsa
-     */
-    public void delete(Transaction transaction) {
-    	System.out.println("Deleting transaction id: "+transaction.getID());
-    	int id=transaction.getID();
-    	String query="DELETE FROM transactions WHERE transactionID=?";
-    	try(Connection connection=DatabaseConn.getConnection(); PreparedStatement stmt=connection.prepareStatement(query)){
-    		stmt.setInt(1, id);
+    
+    private void cancelSubscription(Transaction transaction) {
+    	String query="UPDATE transactions SET subscription=0 WHERE transactionID=?";
+    	try(Connection conn=DatabaseConn.getConnection(); PreparedStatement stmt=conn.prepareStatement(query)){
+    		stmt.setInt(1, transaction.getID());
     		int rows=stmt.executeUpdate();
     		if(rows>0) {
-    			System.out.println("Deleted");
-    			box.getChildren().removeIf(node->{
-    				Group card=(Group) node;
-    				return card.getUserData()!=null && ((Transaction) card.getUserData()).getID()==id;
-    			});
+    			System.out.println("Subscription cancelled: "+transaction.getName());
     			loadTransactions();
     		}
     		else {
-    			System.out.println("Transaction not found");
+    			System.out.println("Failed to cancel transaction: "+transaction.getName());
     		}
     	}
     	catch(Exception e) {
@@ -327,7 +328,7 @@ public class SubsCtrl {
     		System.out.println("User not logged in");
     		return;
     	}
-    	String query="SELECT * FROM transactions WHERE userID=? ORDER BY transactionID DESC";
+    	String query="SELECT * FROM transactions t1 WHERE userID=? AND subscription=1 AND transactionID=(SELECT MAX(transactionID) FROM transactions t2 WHERE t1.name=t2.name AND t1.userID=t2.userID) ORDER BY transactionID DESC";
     	try(Connection connection=DatabaseConn.getConnection(); PreparedStatement stmt=connection.prepareStatement(query)){
     		stmt.setInt(1, userID);
     		ResultSet result=stmt.executeQuery();
@@ -344,12 +345,19 @@ public class SubsCtrl {
                 String source=result.getString("source");
                 int essentialVal=result.getInt("essential");
                 boolean essential=essentialVal==1;
-                if("income".equalsIgnoreCase(transactionType)) { //add income object
-        			//transactions.add(new Income(transactionID, name, amount, category, paymentMethod, date, false, excluded, source));
-        		}
-                else if("expense".equalsIgnoreCase(transactionType)) {//add expeense object
-                	//Expense expense=new Expense(transactionID, name, amount, category, paymentMethod, date, essential, excluded, essential);
-                	//transactions.add(expense);
+                boolean isSubscription=result.getInt("subscription")==1;
+                String currency=result.getString("currency");
+                if(result.getInt("subscription")==1) {
+                	if("income".equalsIgnoreCase(transactionType)) { //add income object
+            			transactions.add(new Income(transactionID, name, amount, category, paymentMethod, date, isSubscription, excluded, currency, source));
+            		}
+                    else if("expense".equalsIgnoreCase(transactionType)) {//add expeense object
+                    	Expense expense=new Expense(transactionID, name, amount, category, paymentMethod, date, isSubscription, excluded, currency, essential);
+                    	transactions.add(expense);
+                    }
+                }
+                else {
+                	System.out.println("Skipping non-subscription transaction: "+name);
                 }
     		}
     	}
@@ -357,6 +365,72 @@ public class SubsCtrl {
     		e.printStackTrace();
     	}
         displayCards(transactions);
+    }
+    
+    public void renew() {
+    	int userID=Session.getUID();
+    	if(userID==-1) {
+    		System.out.println("User not logged in");
+    		return;
+    	}
+    	String query="SELECT * FROM transactions WHERE userID=? AND subscription=1";
+    	LocalDate today=LocalDate.now();
+    	try(Connection conn=DatabaseConn.getConnection(); PreparedStatement stmt=conn.prepareStatement(query)){
+    		stmt.setInt(1, userID);
+    		ResultSet result=stmt.executeQuery();
+    		while(result.next()) {
+    			int transactionID=result.getInt("transactionID");
+                String name=result.getString("name");
+                double amount=result.getDouble("amount");
+                String category=result.getString("category");
+                String paymentMethod=result.getString("paymentMethod");
+                LocalDate date=result.getDate("date").toLocalDate();
+                String transactionType=result.getString("transactionType");
+                String source=result.getString("source");
+                String currency=result.getString("currency");
+                
+                if(date.getDayOfMonth()==today.getDayOfMonth()) {
+                	String checkQ="SELECT COUNT(*) FROM transactions WHERE userID=? AND name=? AND date=?";
+                	try(PreparedStatement checkS=conn.prepareStatement(checkQ)){
+                		checkS.setInt(1, userID);
+                		checkS.setString(2, name);
+                		checkS.setDate(3, java.sql.Date.valueOf(today));
+                		ResultSet checkR=checkS.executeQuery();
+                		if(checkR.next() && checkR.getInt(1)>0) {
+                			System.out.println("Subscription already renewed today: "+name);
+                			continue;
+                		}
+                	}
+                	catch (Exception e) {
+						e.printStackTrace();
+					}
+                	String insertQ="INSERT INTO transactions (userID, name, amount, category, paymentMethod, date, subscription, transactionType, source, currency) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                	try(PreparedStatement insertS=conn.prepareStatement(insertQ)){
+                		insertS.setInt(1, userID);
+                        insertS.setString(2, name);
+                        insertS.setDouble(3, amount);
+                        insertS.setString(4, category);
+                        insertS.setString(5, paymentMethod);
+                        insertS.setDate(6, java.sql.Date.valueOf(today));
+                        insertS.setBoolean(7, true);
+                        insertS.setString(8, transactionType);
+                        insertS.setString(9, source);
+                        insertS.setString(10, currency);
+                        
+                        int rows=insertS.executeUpdate();
+                        if(rows>0) {
+                        	System.out.println("Renewed subscription: "+name);
+                        }
+                	}
+                	catch(Exception e) {
+						e.printStackTrace();
+					}
+                }
+    		}
+    	}
+    	catch(Exception e1) {
+			e1.printStackTrace();
+		}
     }
 
     /**
