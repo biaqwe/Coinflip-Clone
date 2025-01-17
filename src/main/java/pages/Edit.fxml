@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
@@ -127,6 +128,11 @@
                   <TextField fx:id="amountField" prefHeight="31.0" prefWidth="160.0" style="-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 2px;" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
                   <ComboBox fx:id="select" prefHeight="31.0" prefWidth="232.0" style="-fx-background-radius: 30px; -fx-background-color: white; -fx-border-color: #aab6fe;; -fx-border-radius: 30px; -fx-border-width: 2px;" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
                   <TextField fx:id="nameField" prefHeight="31.0" prefWidth="160.0" style="-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 2px;" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" />
+                  <ComboBox fx:id="currencyBox" prefHeight="26.0" prefWidth="73.0" style="-fx-background-color: white; -fx-background-radius: 20px;" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets right="3.0" />
+                     </GridPane.margin>
+                  </ComboBox>
                </children>
             </GridPane>
             <Button layoutX="132.0" layoutY="424.0" mnemonicParsing="false" onAction="#edit" prefHeight="38.0" prefWidth="128.0" style="-fx-background-radius: 30px; -fx-background-color: #b397f0; -fx-cursor: hand;" text="Edit" textFill="WHITE">

@@ -137,6 +137,8 @@ public class AddCtrl {
      */
     @FXML
 	private TextField amountField;
+    @FXML
+    private ComboBox<String> currencyBox;
     /**
      * Campul pentru categoria tranzactiei
      */
@@ -174,6 +176,8 @@ public class AddCtrl {
         		addEss();
         	}
         });
+        currencyBox.setStyle("-fx-font-family: 'HirukoPro-Book';"+"-fx-background-radius: 30px;"+"-fx-border-color: none;"+"-fx-border-radius: 20px;"+"-fx-border-width: 0px;"+"-fx-background-color: white;"+"-fx-font-size: 12px;"+"-fx-text-fill: #6b6290;");
+        currencyBox.getItems().addAll("USD", "EUR", "RON", "GBP", "JPY", "INR");
     }
     /**
      * Functie pentru afisarea alertelor
@@ -207,6 +211,7 @@ public class AddCtrl {
     	String transactionType=(String) select.getValue();
     	String source=transactionType.equals("Income") ? srcField.getText():null;
     	boolean essential=transactionType.equals("Expense") ? essCb.isSelected():false;
+    	String currency=currencyBox.getValue();
 
     	if(!valid(name, amountField.getText(), category, transactionType, source)){
     		return;
@@ -226,7 +231,7 @@ public class AddCtrl {
         System.out.println("Transaction Type: " + transactionType);
         System.out.println("Source: " + source);
         System.out.println("Essential: " + essential);
-    	String query="INSERT INTO transactions (userID, name, amount, category, paymentMethod, date, subscription, excludedFromReport, transactionType, source, essential) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    	String query="INSERT INTO transactions (userID, name, amount, category, paymentMethod, date, subscription, excludedFromReport, transactionType, source, essential, currency) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try(Connection connection=DatabaseConn.getConnection(); PreparedStatement stmt=connection.prepareStatement(query)){
 			stmt.setInt(1, userID);
             stmt.setString(2, name);
@@ -239,6 +244,7 @@ public class AddCtrl {
             stmt.setString(9, transactionType);
             stmt.setString(10, source);
             stmt.setBoolean(11, essential);
+            stmt.setString(12, currency);
             int rows=stmt.executeUpdate();
             if(rows>0)
             	System.out.println("Transaction added");

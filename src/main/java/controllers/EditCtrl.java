@@ -148,6 +148,8 @@ public class EditCtrl {
         		addEss();
         	}
         });
+        currencyBox.setStyle("-fx-background-radius: 30px;"+"-fx-border-color: none;"+"-fx-border-radius: 20px;"+"-fx-border-width: 0px;"+"-fx-background-color: white;"+"-fx-font-size: 12px;"+"-fx-text-fill: #6b6290;");
+        currencyBox.getItems().addAll("USD", "EUR", "RON", "GBP", "JPY", "INR");
     }
     
     /**
@@ -180,6 +182,8 @@ public class EditCtrl {
      */
     @FXML
     private CheckBox exclBox;
+    @FXML
+    private ComboBox<String> currencyBox;
     /**
      * Obiect de tip tranzactie
      */
@@ -194,6 +198,7 @@ public class EditCtrl {
     	nameField.setStyle("-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 2px; -fx-text-fill: #6b6290; -fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book';");
     	amountField.setText(String.valueOf(transaction.getAmount()));
     	amountField.setStyle("-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 2px; -fx-text-fill: #6b6290; -fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book';");
+    	currencyBox.setValue(transaction.getCurrency());
     	categField.setText(transaction.getCategory());
     	categField.setStyle("-fx-background-radius: 30px; -fx-border-color: #aab6fe; -fx-border-radius: 30px; -fx-border-width: 2px; -fx-text-fill: #6b6290; -fx-font-size: 20px; -fx-font-family: 'HirukoPro-Book';");
     	paymentField.setText(transaction.getPayment());
@@ -249,10 +254,6 @@ public class EditCtrl {
     	double amount;
     	try {
     		amount=Double.parseDouble(amountStr);
-    		if(amount<=0) {
-    			showAlert("Validation Error", "Transaction amount should be positive");
-        		return false;
-    		}
     	}
     	catch (NumberFormatException e){
     		showAlert("Validation Error", "Transaction amount not valid");
@@ -282,14 +283,16 @@ public class EditCtrl {
         String type=select.getValue();
         String source="Income".equals(type) ? srcField.getText():null;
         boolean isEssential="Expense".equals(type) && essCb.isSelected();
+        String currency=currencyBox.getValue();
 
         if(!valid(name, amountStr, category, type, source)) {
+        	return;
         }
 
         double amount=Double.parseDouble(amountStr);
 
         try(Connection conn=DatabaseConn.getConnection()) {
-            String query="UPDATE transactions SET name=?, amount=?, category=?, paymentMethod=?, subscription=?, excludedFromReport=?, transactionType=? WHERE transactionID=?";
+            String query="UPDATE transactions SET name=?, amount=?, category=?, paymentMethod=?, subscription=?, excludedFromReport=?, transactionType=?, currency=? WHERE transactionID=?";
             try(PreparedStatement stmt=conn.prepareStatement(query)) {
                 stmt.setString(1, name);
                 stmt.setDouble(2, amount);
@@ -298,7 +301,8 @@ public class EditCtrl {
                 stmt.setBoolean(5, isSubscription);
                 stmt.setBoolean(6, isExcluded);
                 stmt.setString(7, type);
-                stmt.setInt(8, transaction.getID());
+                stmt.setString(8, currency);
+                stmt.setInt(9, transaction.getID());
                 stmt.executeUpdate();
             }
 
