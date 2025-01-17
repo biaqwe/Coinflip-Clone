@@ -345,11 +345,11 @@ public class SubsCtrl {
                 int essentialVal=result.getInt("essential");
                 boolean essential=essentialVal==1;
                 if("income".equalsIgnoreCase(transactionType)) { //add income object
-        			transactions.add(new Income(transactionID, name, amount, category, paymentMethod, date, false, excluded, source));
+        			//transactions.add(new Income(transactionID, name, amount, category, paymentMethod, date, false, excluded, source));
         		}
                 else if("expense".equalsIgnoreCase(transactionType)) {//add expeense object
-                	Expense expense=new Expense(transactionID, name, amount, category, paymentMethod, date, essential, excluded, essential);
-                	transactions.add(expense);
+                	//Expense expense=new Expense(transactionID, name, amount, category, paymentMethod, date, essential, excluded, essential);
+                	//transactions.add(expense);
                 }
     		}
     	}
