@@ -520,11 +520,12 @@ public class MainCtrl {
                 int essentialVal=result.getInt("essential");
                 boolean essential=essentialVal==1;
                 String currency=result.getString("currency");
+                boolean isSubscription=result.getInt("subscription")==1;
                 if("income".equalsIgnoreCase(transactionType)) { //add income object
-        			transactions.add(new Income(transactionID, name, amount, category, paymentMethod, date, false, excluded, currency, source));
+        			transactions.add(new Income(transactionID, name, amount, category, paymentMethod, date, isSubscription, excluded, currency, source));
         		}
                 else if("expense".equalsIgnoreCase(transactionType)) {//add expeense object
-                	Expense expense=new Expense(transactionID, name, amount, category, paymentMethod, date, essential, excluded, currency, essential);
+                	Expense expense=new Expense(transactionID, name, amount, category, paymentMethod, date, isSubscription, excluded, currency, essential);
                 	transactions.add(expense);
                 }
     		}
