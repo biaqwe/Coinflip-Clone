@@ -176,6 +176,18 @@ public class AddCtrl {
         });
     }
     /**
+     * Functie pentru afisarea alertelor
+     * @param title titlul alertei
+     * @param message mesajul alertei
+     */
+    private void showAlert(String title, String message) {
+    	javafx.scene.control.Alert alert=new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+    /**
      * Buton pentru adaugarea tranzactiei in baza de date; la apasarea acestuia se executa functia "add"
      */
     @FXML
@@ -195,14 +207,11 @@ public class AddCtrl {
     	String transactionType=(String) select.getValue();
     	String source=transactionType.equals("Income") ? srcField.getText():null;
     	boolean essential=transactionType.equals("Expense") ? essCb.isSelected():false;
-    	
-    	try {
-    		valid(name, amountField.getText(), category, transactionType, source);
-    	}
-    	catch(Exception e) {
-    		System.out.println("Validation failed: "+e.getMessage());
+
+    	if(!valid(name, amountField.getText(), category, transactionType, source)){
     		return;
     	}
+
     	amount=Double.parseDouble(amountField.getText());
     	if("Expense".equals(transactionType)) {
     		amount=-Math.abs(amount);
@@ -265,23 +274,28 @@ public class AddCtrl {
      */
     boolean valid(String name, String amountStr, String category, String transactionType, String source) {
     	if(name==null || name.trim().isEmpty()) {
-    		throw new NullPointerException("Transaction name should not be null or empty");
+    		showAlert("Validation Error", "Transaction name should not be null or empty");
+    		return false;
     	}
     	double amount;
     	try {
     		amount=Double.parseDouble(amountStr);
     		if(amount<=0) {
-    			throw new IllegalArgumentException("Transaction amount should be positive");
+    			showAlert("Validation Error", "Transaction amount should be positive");
+        		return false;
     		}
     	}
     	catch (NumberFormatException e){
-    		throw new IllegalArgumentException("Transaction amount not valid");
+    		showAlert("Validation Error", "Transaction amount not valid");
+    		return false;
     	}
     	if(category==null || category.trim().isEmpty()) {
-    		throw new NullPointerException("Transaction category should not be null or empty");
+    		showAlert("Validation Error", "Transaction category should not be null or empty");
+    		return false;
     	}
     	if("Income".equals(transactionType) && (source==null || source.trim().isEmpty())) {
-    		throw new NullPointerException("Transaction source should not be null or empty");
+    		showAlert("Validation Error", "Transaction source should not be null or empty");
+    		return false;
     	}
     	return true;
     }

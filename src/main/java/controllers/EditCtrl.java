@@ -218,53 +218,112 @@ public class EditCtrl {
 
     	}
     }
-    
+    /**
+     * Functie pentru afisarea alertelor
+     * @param title titlul alertei
+     * @param message mesajul alertei
+     */
+    private void showAlert(String title, String message) {
+    	javafx.scene.control.Alert alert=new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+    /**
+     * Verifica daca datele introduse sunt valide
+     * @param name numele tranzactiei
+     * @param amountStr suma tranzactiei
+     * @param category categoria tranzactiei
+     * @param transactionType tipul tranzactiei
+     * @param source sursa tranzactiei, obligatorie daca tranzactia e de tip cheltuiala
+     * @return true daca toate datele sunt valide
+     * @throws NullPointerException daca numele, categoria sau sursa sunt null sau goale
+     * @throws IllegalArgumentException daca suma nu e un numar valid pozitiv
+     */
+    boolean valid(String name, String amountStr, String category, String transactionType, String source) {
+    	if(name==null || name.trim().isEmpty()) {
+    		showAlert("Validation Error", "Transaction name should not be null or empty");
+    		return false;
+    	}
+    	double amount;
+    	try {
+    		amount=Double.parseDouble(amountStr);
+    		if(amount<=0) {
+    			showAlert("Validation Error", "Transaction amount should be positive");
+        		return false;
+    		}
+    	}
+    	catch (NumberFormatException e){
+    		showAlert("Validation Error", "Transaction amount not valid");
+    		return false;
+    	}
+    	if(category==null || category.trim().isEmpty()) {
+    		showAlert("Validation Error", "Transaction category should not be null or empty");
+    		return false;
+    	}
+    	if("Income".equals(transactionType) && (source==null || source.trim().isEmpty())) {
+    		showAlert("Validation Error", "Transaction source should not be null or empty");
+    		return false;
+    	}
+    	return true;
+    }
+    /**
+     * Colecteaza datele din formular si editeaza o tranzactie din baza de date; dupa editare redirectioneaza utilizatorul catre pagina principala
+     */
     @FXML
     private void edit() {
-    	String name=nameField.getText();
-    	double amount=Double.parseDouble(amountField.getText());
-    	String category=categField.getText();
-    	String payment=paymentField.getText();
-    	boolean isSubscription=subBox.isSelected();
-    	boolean isExcluded=exclBox.isSelected();
-    	String type=(String) select.getValue();
-    	try(Connection conn=DatabaseConn.getConnection()){
-    		String query;
-    		query="UPDATE transactions SET name=?, amount=?, category=?, paymentMethod=?, subscription=?, excludedFromReport=?, transactionType=? WHERE transactionID=?";
-    		try(PreparedStatement stmt=conn.prepareStatement(query)){
-				stmt.setString(1, name);
-				stmt.setDouble(2, amount);
-				stmt.setString(3, category);
-				stmt.setString(4, payment);
-				stmt.setBoolean(5, isSubscription);
-				stmt.setBoolean(6, isExcluded);
-				stmt.setString(7, type);
-				stmt.setInt(8, transaction.getID());
-				stmt.executeUpdate();
-			}
-    		
-    		if("Income".equals(type)) {
-    			String source=srcField.getText();
-    			query="UPDATE transactions SET source=?, essential=NULL WHERE transactionID=?";
-    			try(PreparedStatement stmt=conn.prepareStatement(query)){
-    				stmt.setString(1, source!=null ? source:"");
-    				stmt.setInt(2, transaction.getID());
-    				stmt.executeUpdate();
-    			}
-    		}
-    		else if("Expense".equals(type)) {
-    			boolean isEssential=essCb.isSelected();
-    			query="UPDATE transactions SET essential=?, source=NULL WHERE transactionID=?";
-    			try(PreparedStatement stmt=conn.prepareStatement(query)){
-    				stmt.setBoolean(1, isEssential);
-    				stmt.setInt(2, transaction.getID());
-    				stmt.executeUpdate();
-    			}
-    		}
-    	}
-    	catch(SQLException e) {
-    		e.printStackTrace();
-    	}
-    	close();
+        String name=nameField.getText();
+        String amountStr=amountField.getText();
+        String category=categField.getText();
+        String payment=paymentField.getText();
+        boolean isSubscription=subBox.isSelected();
+        boolean isExcluded=exclBox.isSelected();
+        String type=select.getValue();
+        String source="Income".equals(type) ? srcField.getText():null;
+        boolean isEssential="Expense".equals(type) && essCb.isSelected();
+
+        if(!valid(name, amountStr, category, type, source)) {
+        }
+
+        double amount=Double.parseDouble(amountStr);
+
+        try(Connection conn=DatabaseConn.getConnection()) {
+            String query="UPDATE transactions SET name=?, amount=?, category=?, paymentMethod=?, subscription=?, excludedFromReport=?, transactionType=? WHERE transactionID=?";
+            try(PreparedStatement stmt=conn.prepareStatement(query)) {
+                stmt.setString(1, name);
+                stmt.setDouble(2, amount);
+                stmt.setString(3, category);
+                stmt.setString(4, payment);
+                stmt.setBoolean(5, isSubscription);
+                stmt.setBoolean(6, isExcluded);
+                stmt.setString(7, type);
+                stmt.setInt(8, transaction.getID());
+                stmt.executeUpdate();
+            }
+
+            if("Income".equals(type)) {
+                query="UPDATE transactions SET source=?, essential=NULL WHERE transactionID=?";
+                try(PreparedStatement stmt=conn.prepareStatement(query)) {
+                    stmt.setString(1, source!=null ? source:"");
+                    stmt.setInt(2, transaction.getID());
+                    stmt.executeUpdate();
+                }
+            }
+            else if("Expense".equals(type)) {
+                query="UPDATE transactions SET essential=?, source=NULL WHERE transactionID=?";
+                try(PreparedStatement stmt=conn.prepareStatement(query)) {
+                    stmt.setBoolean(1, isEssential);
+                    stmt.setInt(2, transaction.getID());
+                    stmt.executeUpdate();
+                }
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        close();
     }
+
 }
