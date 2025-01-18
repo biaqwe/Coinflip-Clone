@@ -272,12 +272,13 @@ public class AddCtrl {
 		}
     }
     /**
-     * Verifica daca datele introduse sunt valide
+     * Afiseaza alerte daca datele introduse nu sunt valide
      * @param name numele tranzactiei
      * @param amountStr suma tranzactiei
      * @param category categoria tranzactiei
      * @param transactionType tipul tranzactiei
      * @param source sursa tranzactiei, obligatorie daca tranzactia e de tip cheltuiala
+     * @param currency moneda tranzactiei
      * @return true daca toate datele sunt valide
      */
     public boolean valid(String name, String amountStr, String category, String transactionType, String source, String currency) {
@@ -290,6 +291,17 @@ public class AddCtrl {
     	}
     	return true;
     }
+    /**
+     * Verifica daca datele introduse sunt valide
+     * @param name numele tranzactiei
+     * @param amountStr suma tranzactiei
+     * @param category categoria tranzactiei
+     * @param transactionType tipul tranzactiei
+     * @param source sursa tranzactiei, obligatorie daca tranzactia e de tip cheltuiala
+     * @param currency moneda tranzactiei
+     * @throws NullPointerException daca numele, categoria, sursa sau moneda sunt null sau goale
+     * @throws IllegalArgumentException daca suma nu e un numar valid pozitiv
+     */
     public void ok(String name, String amountStr, String category, String transactionType, String source, String currency) {
     	if(name==null || name.trim().isEmpty()) {
     		throw new NullPointerException("Transaction name should not be null or empty");
