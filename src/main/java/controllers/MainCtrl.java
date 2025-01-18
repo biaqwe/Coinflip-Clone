@@ -12,7 +12,6 @@ import java.util.List;
 import entities.Expense;
 import entities.Income;
 import entities.Transaction;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
