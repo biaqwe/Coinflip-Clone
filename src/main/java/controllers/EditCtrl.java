@@ -239,38 +239,57 @@ public class EditCtrl {
         alert.showAndWait();
     }
     /**
+     * Afiseaza alerte daca datele introduse nu sunt valide
+     * @param name numele tranzactiei
+     * @param amountStr suma tranzactiei
+     * @param category categoria tranzactiei
+     * @param transactionType tipul tranzactiei
+     * @param source sursa tranzactiei, obligatorie daca tranzactia e de tip cheltuiala
+     * @param currency moneda tranzactiei
+     * @return true daca toate datele sunt valide
+     */
+    public boolean valid(String name, String amountStr, String category, String transactionType, String source, String currency) {
+    	try {
+    		ok(name, amountStr, category, transactionType, source, currency);
+    	}
+    	catch(NullPointerException | IllegalArgumentException e) {
+    		showAlert("Validation Error", e.getMessage());
+            return false;
+    	}
+    	return true;
+    }
+    /**
      * Verifica daca datele introduse sunt valide
      * @param name numele tranzactiei
      * @param amountStr suma tranzactiei
      * @param category categoria tranzactiei
      * @param transactionType tipul tranzactiei
      * @param source sursa tranzactiei, obligatorie daca tranzactia e de tip cheltuiala
-     * @return true daca toate datele sunt valide
-     * @throws NullPointerException daca numele, categoria sau sursa sunt null sau goale
+     * @param currency moneda tranzactiei
+     * @throws NullPointerException daca numele, categoria, sursa sau moneda sunt null sau goale
      * @throws IllegalArgumentException daca suma nu e un numar valid pozitiv
      */
-    boolean valid(String name, String amountStr, String category, String transactionType, String source) {
+    public void ok(String name, String amountStr, String category, String transactionType, String source, String currency) {
     	if(name==null || name.trim().isEmpty()) {
-    		showAlert("Validation Error", "Transaction name should not be null or empty");
-    		return false;
+    		throw new NullPointerException("Transaction name should not be null or empty");
     	}
     	double amount;
     	try {
     		amount=Double.parseDouble(amountStr);
     	}
     	catch (NumberFormatException e){
-    		showAlert("Validation Error", "Transaction amount not valid");
-    		return false;
+    		throw new IllegalArgumentException("Transaction amount not valid");
+    	}
+    	if(currency==null || currency.trim().isEmpty()) {
+    		throw new NullPointerException("Transaction currency should not be null or empty");
     	}
     	if(category==null || category.trim().isEmpty()) {
-    		showAlert("Validation Error", "Transaction category should not be null or empty");
-    		return false;
+    		throw new NullPointerException("Transaction category should not be null or empty");
     	}
     	if("Income".equals(transactionType) && (source==null || source.trim().isEmpty())) {
-    		showAlert("Validation Error", "Transaction source should not be null or empty");
-    		return false;
+    		throw new NullPointerException("Transaction source should not be null or empty");
     	}
-    	return true;
+    	
     }
     /**
      * Colecteaza datele din formular si editeaza o tranzactie din baza de date; dupa editare redirectioneaza utilizatorul catre pagina principala
@@ -288,11 +307,18 @@ public class EditCtrl {
         boolean isEssential="Expense".equals(type) && essCb.isSelected();
         String currency=currencyBox.getValue();
 
-        if(!valid(name, amountStr, category, type, source)) {
+        if(!valid(name, amountStr, category, type, source, currency)) {
         	return;
         }
 
         double amount=Double.parseDouble(amountStr);
+        
+        if("Income".equals(type) && amount<0) {
+            amount=Math.abs(amount);
+        }
+        else if("Expense".equals(type) && amount>0) {
+            amount=-amount;
+        }
 
         try(Connection conn=DatabaseConn.getConnection()) {
             String query="UPDATE transactions SET name=?, amount=?, category=?, paymentMethod=?, subscription=?, excludedFromReport=?, transactionType=?, currency=? WHERE transactionID=?";
