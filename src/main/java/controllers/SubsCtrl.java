@@ -233,7 +233,8 @@ public class SubsCtrl {
         }
         //format amount to string
         DecimalFormat df=new DecimalFormat("#,###.00"); // , as thousand separator + always 2 decimals
-        String amountStr=df.format(transaction.getAmount());
+        String currency=transaction.getCurrency()!=null ? transaction.getCurrency():"";
+        String amountStr=df.format(transaction.getAmount())+" "+currency;
         Text amount=new Text(amountStr);
         amount.setFill(javafx.scene.paint.Color.valueOf("#6b6290"));
         amount.setFont(new Font("HirukoPro-Book", 18));
@@ -397,7 +398,7 @@ public class SubsCtrl {
                 String source=result.getString("source");
                 String currency=result.getString("currency");
                 
-                if(date.getDayOfMonth()==today.getDayOfMonth()) {
+                if(date.equals(today.minusMonths(1))) {
                 	String checkQ="SELECT COUNT(*) FROM transactions WHERE userID=? AND name=? AND date=?";
                 	try(PreparedStatement checkS=conn.prepareStatement(checkQ)){
                 		checkS.setInt(1, userID);
@@ -455,6 +456,7 @@ public class SubsCtrl {
         box.setMinWidth(Region.USE_PREF_SIZE);
         box.setMaxWidth(Double.MAX_VALUE);
         box.setMaxHeight(Double.MAX_VALUE);
+        renew();
         loadTransactions();
     }
 }
