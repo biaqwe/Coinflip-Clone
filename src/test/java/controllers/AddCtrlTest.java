@@ -56,6 +56,7 @@ public class AddCtrlTest {
         int userID=3;
         String name="test";
         double amount=50.0;
+        amount=-Math.abs(amount);
         String category="test";
         String paymentMethod="test";
         boolean subscription=false;
