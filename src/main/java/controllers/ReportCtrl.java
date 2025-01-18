@@ -164,8 +164,8 @@ public class ReportCtrl {
     /**
      * Container pentru organizarea elementelor
      */
-    @FXML
-    private VBox box;
+    @FXML 
+    VBox box;
     /**
      * ScrollPane care permite vizualizarea continutului care depaseste dimensiunile ferestrei
      */
@@ -174,13 +174,13 @@ public class ReportCtrl {
     /**
      * ComboBox care permite selectarea anului pentru raport
      */
-    @FXML
-    private ComboBox<Integer> ySelect;
+    @FXML 
+    ComboBox<Integer> ySelect;
     /**
      * ComboBox care permite selectarea lunii pentru raport
      */
-    @FXML
-    private ComboBox<String> mSelect;
+    @FXML 
+    ComboBox<String> mSelect;
     /**
      * Buton care permite generarea raportului
      */
@@ -252,8 +252,8 @@ public class ReportCtrl {
     /**
      * Genereaza raportul (in EUR) pentru luna si anul specificat; Afiseaza un grafic, suma incasata, suma cheltuita, suma economisita, numarul de cheltuieli esentiale si categoria cu cea mai mare suma cheltuita
      */
-    @FXML
-    private void generate() {
+    @FXML 
+    void generate() {
         Integer y=ySelect.getValue();
         String m=mSelect.getValue();
         if(y==null || m==null) {
