@@ -13,7 +13,7 @@ Coinflip este o aplicatie pentru gestionarea bugetului personal care permite uti
 * suporta tranzactii recurente, cum ar fi abonamente, care se adauga automat in fiecare luna
 
 ### Filtrarea tranzactiilor:
-* utilizatorii pot filtra tranzactiile dupa categorie (ex. transport, utilitati) si dupa metoda de plata (cash sau card)
+* utilizatorii pot filtra tranzactiile dupa categorie (ex. transport, utilitati) si dupa tip (venit sau cheltuiala)
 
 ### Generarea rapoartelor:
 * aplicatia poate genera rapoarte care rezuma totalul veniturilor si cheltuielilor pentru o anumita luna
@@ -22,22 +22,22 @@ Coinflip este o aplicatie pentru gestionarea bugetului personal care permite uti
 ## Arhitectura
 
 ### Clase
-![JPEG image-4D85-B89A-A7-0](https://github.com/user-attachments/assets/577e4a20-801e-487c-9279-2a6ab9854ed5)
-
+<img width="529" alt="Screenshot 2025-01-18 at 23 05 45" src="https://github.com/user-attachments/assets/9bd73e85-e5f1-4fd6-b625-a840044d46c4" />
 
 * clasa "Transaction"
   - Atribute:
     - transactionID (int): identifificatorul unic al tranzactiei
+    - name (String): numele tranzactiei
     - amount (double): suma care a fost incasata sau decontata
     - category (String): categoria tranzactiei
     - paymentMethod (String): metoda de plata (ex. cash, card)
     - date (String): data tranzactiei
     - subscription (boolean): true daca tranzactia este de tip abonament, false altfel (valoarea implicita: false)
     - excpludedFromReport (boolean): true daca tranzactia va fi exclusa din raport, false altfel (valoarea implicita: false)
+    - currency (String): moneda tranzactiei
   - Operatii:
-    - getDetails(): include metodele de tip get pentru fiecare atribut
-    - makeSubscription(): inverseaza valoarea curenta a atributului "subscription"
-    - excludeFromReport(): inverseaza valoarea curenta a atributului "excpludedFromReport"
+    - metode de tip get pentru fiecare atribut
+    - metode de tip set pentru fiecare atribut
    
 * clasa "Income" extinde clasa "Transaction"
   - Atribute:
@@ -47,44 +47,29 @@ Coinflip este o aplicatie pentru gestionarea bugetului personal care permite uti
   - Atribute:
     - isEssential (boolean): true daca tranzactia este esentiala (ex. chirie), false altfel (valoarea implicita: false)
    
-* clasa "User"
-  - Atribute:
-    - userID (int): identifificatorul unic al utilizatorului
-    - username (String)
-    - password (String)
-    - email (String)
-    - transactions (Transaction): lista de tranzactii a utilizatorului
-  - Operatii:
-    - login(username, password)
-    - signup(username, password, email)
-    - addTransaction(transaction): adauga o noua tranzactie in lista
-    - removeTransaction(transaction): elimina o tranzactie din lista
-    - editTransaction(transaction): editeaza o tranzactie din lista
-    - getTransactions(): returneaza lista de tranzactii
-    - getTransactionsByCategory(category): returneaza tranzactiile din lista care fac parte dintr-o anumita categorie
-    - getTransactionsByPaymentMethod(paymentMethod): returneaza tranzactiile din lista care au metoda de plata specificata
-    - generateReport(month, year): genereaza un raport al tranzactiilor utilizatorului pentru luna si anul specificate
-   
 ### Tabele
-![JPEG image-4483-95C9-C4-0](https://github.com/user-attachments/assets/2e502fec-5588-43ce-8682-bd7dfc47c1f5)
-* tabelul "users": contine utilizatorii, fiecare cu un identificator, username, parola si email
-* tabelul "categories": contine categoriile de tranzactii, fiecare cu un identificator si nume
-* tabelul "transactions": contine tranzactiile, cu detalii despre suma, metoda de plata, data, tipul de tranzactie (in caz de abonament), daca este exclusa din raport, sursa (in cazul veniturilor), si daca este esentiala (in cazul cheltuielilor); are legaturi catre tabelele "users" si "categories" prin campurile "userID" si "categoryID"
+<img width="621" alt="Screenshot 2025-01-18 at 22 52 13" src="https://github.com/user-attachments/assets/e5f6d4b2-bf05-4d41-9dee-e9cf2427ecc7" />
+
+* tabelul "users": contine utilizatorii, fiecare cu un identificator, username si parola
+* tabelul "transactions": contine tranzactiile, cu detalii despre nume, suma, moneda, metoda de plata, data, daca este abonament, daca este exclusa din raport, tip, sursa (in cazul veniturilor), si daca este esentiala (in cazul cheltuielilor); are legatura catre tabelul "users" prin campul "userID"
 
 ### Pagini
-![Untitled_Artwork 2](https://github.com/user-attachments/assets/57e681bb-31e1-4472-9491-0dd0c4a91ad1)
+<img width="399" alt="Screenshot 2025-01-18 at 22 53 50" src="https://github.com/user-attachments/assets/ce4ee5eb-f11d-473e-8fe1-e1a8d0dc44bf" />
+<img width="399" alt="Screenshot 2025-01-18 at 22 53 06" src="https://github.com/user-attachments/assets/e6832798-f284-4ac3-88b7-f973f3e04e78" />
+<img width="399" alt="Screenshot 2025-01-18 at 22 55 30" src="https://github.com/user-attachments/assets/125a5275-1d74-4ce7-8e50-727c4b574b25" />
+<img width="399" alt="Screenshot 2025-01-18 at 22 56 08" src="https://github.com/user-attachments/assets/4ce4b58b-7216-46a0-a3a9-58cc903a54a6" />
 
 ## Functionalitati/Exemple utilizare
 ### Inregistrare:
-* Utilizatorul completeaza un formular cu informatiile de inregistrare (username, parola, email)
-* Verifica daca username-ul si email-ul sunt unice
+* Utilizatorul completeaza un formular cu informatiile de inregistrare (username, parola)
+* Verifica daca username-ul e unic
 
 ### Autentificare:
 * Utilizatorul introduce username-ul si parola alese in timpul inregistrarii
 * Daca datele sunt corecte, utilizatorul este autentificat
 
 ### Adaugarea unei tranzactii:
-* Utilizatorul poate adauga o noua tranzactie (venit sau cheltuiala) completand un formular cu urmatoarele detalii: suma, categoria, metoda de plata, data, si tipul de tranzactie (abonament sau nu)
+* Utilizatorul poate adauga o noua tranzactie (venit sau cheltuiala) completand un formular cu urmatoarele detalii: nume, suma, moneda, categoria, metoda de plata, data, si tipul de tranzactie (abonament sau nu)
 * Utilizatorul poate selecta daca tranzactia sa fie exclusa din rapoarte
 
 ### Editarea unei tranzactii:
@@ -94,7 +79,7 @@ Coinflip este o aplicatie pentru gestionarea bugetului personal care permite uti
 * Utilizatorul poate sterge o tranzactie din lista
 
 ### Filtrarea tranzactiilor:
-* Utilizatorul poate filtra tranzactiile dupa categorie sau dupa metoda de plata
+* Utilizatorul poate filtra tranzactiile dupa categorie sau dupa tip
 
 ### Generarea unui raport lunar:
 * Utilizatorul poate genera un raport al tranzactiilor pentru o luna si un an specificat
