@@ -24,7 +24,7 @@ public class AddCtrlTest {
         String category="test";
         String paymentMethod="test";
         boolean subscription=false;
-        boolean excludedFromReport=false;
+        boolean excludedFromReport=true;
         String transactionType="Income";
         String source="test";
         boolean essential=false;
@@ -60,7 +60,7 @@ public class AddCtrlTest {
         String category="test";
         String paymentMethod="test";
         boolean subscription=false;
-        boolean excludedFromReport=false;
+        boolean excludedFromReport=true;
         String transactionType="Expense";
         String source=null;
         boolean essential=true;

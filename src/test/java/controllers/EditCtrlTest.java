@@ -24,7 +24,7 @@ public class EditCtrlTest {
         String category="test edit";
         String paymentMethod="test edit";
         boolean subscription=true;
-        boolean excludedFromReport=false;
+        boolean excludedFromReport=true;
         String transactionType="Income";
         String source="test edit";
         boolean essential=false;
@@ -59,7 +59,7 @@ public class EditCtrlTest {
         String category="test edit";
         String paymentMethod="test edit";
         boolean subscription=true;
-        boolean excludedFromReport=false;
+        boolean excludedFromReport=true;
         String transactionType="Expense";
         String source=null;
         boolean essential=true;

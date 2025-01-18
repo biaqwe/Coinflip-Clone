@@ -155,8 +155,8 @@ public class MainCtrl {
     /**
      * Container pentru organizarea elementelor
      */
-    @FXML
-    private VBox box;
+    @FXML 
+    VBox box;
     /**
      * ScrollPane care permite vizualizarea continutului care depaseste dimensiunile ferestrei
      */
@@ -419,8 +419,8 @@ public class MainCtrl {
     /**
      * Field ul pentru cautare
      */
-    @FXML
-    private TextField searchF;
+    @FXML 
+    TextField searchF;
     /**
      * Butonul pentru cautare
      */
@@ -430,8 +430,8 @@ public class MainCtrl {
     /**
      * Cauta tranzactiile dupa nume
      */
-    @FXML
-    private void search() {
+    @FXML 
+    void search() {
     	String text=searchF.getText().trim();
     	if(text.isEmpty()) {
     		loadTransactions();
