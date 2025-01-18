@@ -37,7 +37,7 @@ import javafx.stage.Stage;
 import utils.DatabaseConn;
 import utils.Session;
 /**
- * Clasa pentru pagina principala
+ * Clasa pentru pagina cu abonamente
  */
 public class SubsCtrl {
 	/**
@@ -285,6 +285,10 @@ public class SubsCtrl {
         return card;
     }
     
+    /**
+     * Anuleaza un abonament: schimba atributul "subscription" al tranzactiei in 0
+     * @param transaction tranzactia pentru care va fi anulat abonamentul
+     */
     private void cancelSubscription(Transaction transaction) {
     	String query="UPDATE transactions SET subscription=0 WHERE transactionID=?";
     	try(Connection conn=DatabaseConn.getConnection(); PreparedStatement stmt=conn.prepareStatement(query)){
@@ -328,6 +332,7 @@ public class SubsCtrl {
     		System.out.println("User not logged in");
     		return;
     	}
+    	//only loads the last subscription of that name added to avoid doubles
     	String query="SELECT * FROM transactions t1 WHERE userID=? AND subscription=1 AND transactionID=(SELECT MAX(transactionID) FROM transactions t2 WHERE t1.name=t2.name AND t1.userID=t2.userID) ORDER BY transactionID DESC";
     	try(Connection connection=DatabaseConn.getConnection(); PreparedStatement stmt=connection.prepareStatement(query)){
     		stmt.setInt(1, userID);
@@ -367,6 +372,9 @@ public class SubsCtrl {
         displayCards(transactions);
     }
     
+    /**
+     * Reinnoieste un abonament in aceeasi zi in fiecare luna; verifica daca abonamentul a fost deja reinnoit in acea zi inainte sa il adauge din nou
+     */
     public void renew() {
     	int userID=Session.getUID();
     	if(userID==-1) {

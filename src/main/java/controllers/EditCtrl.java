@@ -182,6 +182,9 @@ public class EditCtrl {
      */
     @FXML
     private CheckBox exclBox;
+    /**
+     * Combobox pentru moneda tranzactiei
+     */
     @FXML
     private ComboBox<String> currencyBox;
     /**

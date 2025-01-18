@@ -137,6 +137,9 @@ public class AddCtrl {
      */
     @FXML
 	private TextField amountField;
+    /**
+     * Combobox pentru moneda tranzactiei
+     */
     @FXML
     private ComboBox<String> currencyBox;
     /**
@@ -275,8 +278,6 @@ public class AddCtrl {
      * @param transactionType tipul tranzactiei
      * @param source sursa tranzactiei, obligatorie daca tranzactia e de tip cheltuiala
      * @return true daca toate datele sunt valide
-     * @throws NullPointerException daca numele, categoria sau sursa sunt null sau goale
-     * @throws IllegalArgumentException daca suma nu e un numar valid pozitiv
      */
     boolean valid(String name, String amountStr, String category, String transactionType, String source) {
     	if(name==null || name.trim().isEmpty()) {

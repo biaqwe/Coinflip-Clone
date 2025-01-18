@@ -44,7 +44,7 @@ import javafx.stage.Stage;
 import utils.DatabaseConn;
 import utils.Session;
 /**
- * Clasa pentru pagina principala
+ * Clasa pentru pagina cu rapoarte
  */
 public class ReportCtrl {
 	/**
@@ -114,6 +114,29 @@ public class ReportCtrl {
             e.printStackTrace();
         }
     }
+    /**
+	 * Butonul pentru accesarea paginii cu rapoarte
+	 */
+    @FXML
+    private Button reportBtn;
+    /**
+     * Redirectioneaza utilizatorul pe pagina cu rapoarte dupa apasarea butonului
+     */
+    @FXML
+    private void report() {
+        try {
+        	FXMLLoader loader=new FXMLLoader(getClass().getResource("/pages/Report.fxml"));
+            Parent root=loader.load();
+            String css = getClass().getResource("/resources/application.css").toExternalForm();
+            root.getStylesheets().add(css);
+            Stage stage=(Stage) reportBtn.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
         
     /**
      * Buton pentru deschiderea paginii de adaugare tranzactie
@@ -163,6 +186,9 @@ public class ReportCtrl {
      */
     @FXML
     private Button gen;
+    /**
+     * Initializeaza combobox ul cu lunile anului
+     */
     @FXML
     private void initialize() {
     	int cyear=LocalDate.now().getYear();
@@ -173,6 +199,12 @@ public class ReportCtrl {
     	mSelect.getItems().addAll(months);
     }
     
+    /**
+     * Gaseste tranzactiile utilizatorului care nu sunt excluse din raport pentru luna si anul specificat
+     * @param y anul specificat
+     * @param m luna specificata
+     * @return lista de tranzactii gasite
+     */
     private List<Transaction> fetchTransactions(int y, int m) {
         List<Transaction> transactions=new ArrayList<>();
         String query = "SELECT * FROM transactions WHERE userID=? AND excludedFromReport=false";
@@ -216,7 +248,10 @@ public class ReportCtrl {
         }
         return transactions;
     }
-
+    
+    /**
+     * Genereaza raportul (in EUR) pentru luna si anul specificat; Afiseaza un grafic, suma incasata, suma cheltuita, suma economisita, numarul de cheltuieli esentiale si categoria cu cea mai mare suma cheltuita
+     */
     @FXML
     private void generate() {
         Integer y=ySelect.getValue();
