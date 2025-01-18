@@ -28,7 +28,8 @@ public class AddCtrlTest {
         String transactionType="Income";
         String source="test";
         boolean essential=false;
-        String query="INSERT INTO transactions (userID, name, amount, category, paymentMethod, date, subscription, excludedFromReport, transactionType, source, essential) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String currency="EUR";
+        String query="INSERT INTO transactions (userID, name, amount, category, paymentMethod, date, subscription, excludedFromReport, transactionType, source, essential, currency) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try(Connection connection=DatabaseConn.getConnection(); PreparedStatement stmt=connection.prepareStatement(query)) {
             stmt.setInt(1, userID);
             stmt.setString(2, name);
@@ -41,6 +42,7 @@ public class AddCtrlTest {
             stmt.setString(9, transactionType);
             stmt.setString(10, source);
             stmt.setBoolean(11, essential);
+            stmt.setString(12, currency);
             int rows=stmt.executeUpdate();
             assertTrue(rows>0);
         }
@@ -61,7 +63,8 @@ public class AddCtrlTest {
         String transactionType="Expense";
         String source=null;
         boolean essential=true;
-        String query="INSERT INTO transactions (userID, name, amount, category, paymentMethod, date, subscription, excludedFromReport, transactionType, source, essential) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String currency="EUR";
+        String query="INSERT INTO transactions (userID, name, amount, category, paymentMethod, date, subscription, excludedFromReport, transactionType, source, essential, currency) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try(Connection connection=DatabaseConn.getConnection(); PreparedStatement stmt=connection.prepareStatement(query)) {
             stmt.setInt(1, userID);
             stmt.setString(2, name);
@@ -74,6 +77,7 @@ public class AddCtrlTest {
             stmt.setString(9, transactionType);
             stmt.setString(10, source);
             stmt.setBoolean(11, essential);
+            stmt.setString(12, currency);
             int rows=stmt.executeUpdate();
             assertTrue(rows>0);
         }
@@ -88,27 +92,37 @@ public class AddCtrlTest {
         String validName="test";
         String validCategory="test";
         double validAmount=100;
+        String validCurrency="EUR";
         assertDoesNotThrow(()-> {
-            addCtrl.valid(validName, String.valueOf(validAmount), validCategory, "Income", "test");
+            addCtrl.ok(validName, String.valueOf(validAmount), validCategory, "Income", "test", validCurrency);
         });
         
         String invalidName=null;
         assertThrows(NullPointerException.class, ()-> {
-            addCtrl.valid(invalidName, String.valueOf(validAmount), validCategory, "Income", "test");
+            addCtrl.ok(invalidName, String.valueOf(validAmount), validCategory, "Income", "test", validCurrency);
         });
 
         String invalidAmount="-10";
         assertThrows(IllegalArgumentException.class, ()-> {
-            addCtrl.valid(validName, invalidAmount, validCategory, "Income", "test");
+            addCtrl.ok(validName, invalidAmount, validCategory, "Income", "test", validCurrency);
         });
 
         String invalidCategory=null;
         assertThrows(NullPointerException.class, ()-> {
-            addCtrl.valid(validName, String.valueOf(validAmount), invalidCategory, "Income", "test");
+            addCtrl.ok(validName, String.valueOf(validAmount), invalidCategory, "Income", "test", validCurrency);
         });
 
         assertThrows(NullPointerException.class, ()-> {
-            addCtrl.valid(validName, String.valueOf(validAmount), validCategory, "Income", "");
+            addCtrl.ok(validName, String.valueOf(validAmount), validCategory, "Income", "", validCurrency);
+        });
+        
+        String invalidCurrency=null;
+        assertThrows(NullPointerException.class, ()-> {
+        	addCtrl.ok(validName, String.valueOf(validAmount), validCategory, "Income", "test", invalidCurrency);
+        });
+        
+        assertThrows(NullPointerException.class, ()-> {
+        	addCtrl.ok(validName, String.valueOf(validAmount), validCategory, "Income", "test", "");
         });
     }
 }
